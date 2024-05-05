@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:insert="fragments/header.html::head('Product')"></head>
+<body>
+	<!-- Menu -->
+	<div th:replace="fragments/menu.html::menu(currentRoute='/product')"></div>
+	
+	<div style="margin-top: 130px;"></div>
+	
+	<div class="container">
+		<div class="text-center h3">Create New Product</div>
+		
+		<form th:action="@{/product/create}" th:object="${productForm}" method="post">
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 30px;">
+				<label for="productName" class="" style="width: 200px;">Product Name: </label>
+				<input class="form-control" type="text" th:field="*{productName}" id="productName" />
+			</div>
+			<div style="margin-top: 20px;">
+				<span class="alert alert-warning d-flex flex-row" th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 30px;">
+				<label for="productCode" class="" style="width: 200px;">Product Code: </label>
+				<input class="form-control" type="text" th:field="*{productCode}" id="productCode" />
+			</div>
+			<div style="margin-top: 20px;">
+				<span class="alert alert-warning d-flex flex-row" th:if="${#fields.hasErrors('productCode')}" th:errors="*{productCode}"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 30px;">
+				<label for="categoryId" style="width: 200px;">Category :</label>
+				<select name="categoryId" id="categoryId" class="form-control">
+					<option th:each="option:${categoryOptions}" th:selected="${option.value == productForm.categoryId}" th:value="${option.value}" th:text="${option.title}"></option>
+				</select>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 30px;">
+				<label for="price" class="" style="width: 200px;">Price: </label>
+				<input class="form-control" type="text" th:field="*{price}" id="price" />
+			</div>
+			<div style="margin-top: 20px;">
+				<span class="alert alert-warning d-flex flex-row" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 30px;">
+				<label for="discount" class="" style="width: 200px;">Discount: </label>
+				<input class="form-control" type="text" th:field="*{discount}" id="discount" />
+			</div>
+			<div style="margin-top: 20px;">
+				<span class="alert alert-warning d-flex flex-row" th:if="${#fields.hasErrors('discount')}" th:errors="*{discount}"></span>
+			</div>
+			<button type="submit" class="btn btn-primary">Create Product</button>
+		</form>
+	</div>
+	
+
+</body>
+</html>

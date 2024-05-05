@@ -1,0 +1,128 @@
+INSERT INTO customers (first_name, last_name, mail, phone, point)
+VALUES
+    ('太郎', '山田', 'taro.yamada@gmail.com', '090-1234-5678', 0),
+    ('花子', '鈴木', 'hanako.suzuki@gmail.com', '080-9876-5432', 0),
+    ('健太', '佐藤', 'kenta.sato@gmail.com', '070-2468-1357', 0),
+    ('美和', '高橋', 'miwa.takahashi@gmail.com', '080-3692-7418', 0),
+    ('隆夫', '田中', 'takao.tanaka@gmail.com', '090-7531-4826', 0),
+    ('明美', '伊藤', 'akemi.ito@gmail.com', '080-1234-5678', 0),
+    ('哲也', '渡辺', 'tetsuya.watanabe@gmail.com', '090-9876-5432', 0),
+    ('真由美', '小林', 'mayumi.kobayashi@gmail.com', '070-2468-1357', 0),
+    ('健一', '加藤', 'kenichi.kato@gmail.com', '080-3692-7418', 0),
+    ('美奈子', '吉田', 'minako.yoshida@gmail.com', '090-7531-4826', 0),
+    ('雅子', '山本', 'masako.yamamoto@gmail.com', '090-1234-5678', 0),
+    ('隆司', '中村', 'takashi.nakamura@gmail.com', '080-9876-5432', 0),
+    ('恵美', '斎藤', 'megumi.saito@gmail.com', '070-2468-1357', 0),
+    ('正男', '森', 'masao.mori@gmail.com', '080-3692-7418', 0),
+    ('直子', '岡田', 'naoko.okada@gmail.com', '090-7531-4826', 0);
+
+INSERT INTO delivery_addresses (region_id, customer_id, address_name, address, post_code, main)
+VALUES
+    (1, 1, '私の家', '東京都港区芝公園1-1-1', '1050011', 1),
+    (2, 2, '友達の家', '大阪府大阪市中央区難波5-1-5', '5420076', 1),
+    (3, 3, 'オフィス', '京都府京都市下京区四条通河原町東入ル松原町243-1', '6008494', 1),
+    (4, 4, '親戚の家', '北海道札幌市中央区北5条西4丁目', '0600005', 1),
+    (5, 5, '仕事先', '福岡県福岡市中央区天神1-11-1', '8100001', 1),
+    (6, 6, '学校', '広島県広島市中区基町6-78', '7300011', 1),
+    (7, 7, '公園', '愛知県名古屋市中区栄3-6-1', '4600008', 1),
+    (8, 8, '病院', '神奈川県横浜市西区南幸2-16-1', '2200004', 1),
+    (9, 9, 'ショッピングモール', '岡山県岡山市北区表町2-2-24', '7000902', 1),
+    (10, 10, '駅前', '宮城県仙台市青葉区一番町1-2-3', '9800823', 1);
+
+INSERT INTO regions (region_name)
+VALUES
+    ('北海道'), -- Hokkaido
+    ('東北'),   -- Tohoku
+    ('関東'),   -- Kanto
+    ('中部'),   -- Chubu
+    ('関西'),   -- Kansai
+    ('中国'),   -- Chugoku
+    ('四国'),   -- Shikoku
+    ('九州'),   -- Kyushu
+    ('沖縄');   -- Okinawa
+
+INSERT INTO branches (region_id, branch_name)
+VALUES
+    (1, '札幌支店'),        -- Sapporo Branch
+    (2, '仙台支店'),        -- Sendai Branch
+    (3, '東京支店'),        -- Tokyo Branch
+    (3, '横浜支店'),        -- Yokohama Branch
+    (3, '千葉支店'),        -- Chiba Branch
+    (4, '名古屋支店'),      -- Nagoya Branch
+    (4, '静岡支店'),        -- Shizuoka Branch
+    (5, '大阪支店'),        -- Osaka Branch
+    (5, '京都支店'),        -- Kyoto Branch
+    (5, '神戸支店'),        -- Kobe Branch
+    (6, '広島支店'),        -- Hiroshima Branch
+    (7, '高松支店'),        -- Takamatsu Branch
+    (8, '福岡支店'),        -- Fukuoka Branch
+    (8, '熊本支店'),        -- Kumamoto Branch
+    (8, '長崎支店'),        -- Nagasaki Branch
+    (9, '那覇支店');        -- Naha Branch
+
+-- Sample data for warehouses
+INSERT INTO warehouses (region_id, warehouse_name)
+VALUES
+    (1, '札幌倉庫'),          -- Sapporo Warehouse
+    (2, '仙台倉庫'),          -- Sendai Warehouse
+    (3, '東京倉庫'),          -- Tokyo Warehouse
+    (4, '名古屋倉庫'),        -- Nagoya Warehouse
+    (5, '大阪倉庫'),          -- Osaka Warehouse
+    (6, '広島倉庫'),          -- Hiroshima Warehouse
+    (7, '高松倉庫'),          -- Takamatsu Warehouse
+    (8, '福岡倉庫'),          -- Fukuoka Warehouse
+    (9, '那覇倉庫');          -- Naha Warehouse
+
+INSERT INTO employees (branch_id, employee_name, mail, password, role)
+VALUES
+    (1, '山田太郎', 'taro.yamada@example.com', 'password123', '1'),      -- Super admin at Sapporo Branch
+    (1, '田中花子', 'hanako.tanaka@example.com', 'password456', '2'),     -- Shop manager at Sapporo Branch
+    (2, '斎藤健太', 'kenta.saito@example.com', 'password789', '2'),       -- Shop manager at Sendai Branch
+    (3, '佐々木美和', 'miwa.sasaki@example.com', 'passwordabc', '3'),     -- Service staff at Tokyo Branch
+    (4, '小林隆夫', 'takao.kobayashi@example.com', 'passworddef', '3'),    -- Service staff at Nagoya Branch
+    (5, '高橋雅子', 'masako.takahashi@example.com', 'passwordghi', '3'),   -- Service staff at Osaka Branch
+    (6, '山本直子', 'naoko.yamamoto@example.com', 'passwordjkl', '3'),     -- Service staff at Hiroshima Branch
+    (7, '中村隆司', 'takashi.nakamura@example.com', 'passwordmno', '3'),   -- Service staff at Takamatsu Branch
+    (8, '岡田恵美', 'megumi.okada@example.com', 'passwordpqr', '3'),       -- Service staff at Fukuoka Branch
+    (9, '田村正男', 'masao.tamura@example.com', 'passwordstu', '3');       -- Service staff at Naha Branch
+
+INSERT INTO categories (category_name)
+VALUES
+    ('ソフトドリンク'),  -- ソフトドリンク
+    ('フルーツ'),       -- フルーツ
+    ('スナック'),       -- スナック
+    ('食事'),          -- 食事
+    ('牛乳');          -- 牛乳
+
+INSERT INTO products (category_id, product_name, product_code, price, discount)
+VALUES
+    (1, 'コーラ', 'CD001', 150, 0),                -- ソフトドリンクの製品
+    (1, 'オレンジジュース', 'OJ001', 200, 0),       -- ソフトドリンクの製品
+    (2, 'りんご', 'AP001', 100, 0),                 -- フルーツの製品
+    (2, 'バナナ', 'BN001', 80, 0),                  -- フルーツの製品
+    (3, 'ポテトチップス', 'PC001', 120, 0),         -- スナックの製品
+    (3, 'チョコレート', 'CH001', 150, 0),           -- スナックの製品
+    (4, 'カレーライス', 'CR001', 500, 0),           -- 食事の製品
+    (4, '寿司セット', 'SS001', 800, 0),             -- 食事の製品
+    (5, '牛乳', 'ML001', 180, 0),                   -- 牛乳の製品
+    (5, 'ヨーグルト', 'YG001', 120, 0);             -- 牛乳の製品
+
+-- Sample data for orders
+INSERT INTO orders (employee_id, customer_id, delivery_address_id, order_code, status)
+VALUES
+    (1, 1, 1, 'ORD001', 1),   -- Sample order 1
+    (2, 2, 2, 'ORD002', 1),   -- Sample order 2
+    (3, 3, 3, 'ORD003', 1);   -- Sample order 3
+
+-- Sample data for order details
+INSERT INTO order_details (order_id, warehouse_detail_id, qty, price, discount)
+VALUES
+    (1, 1, 2, 300, 0),    -- Sample order detail 1
+    (1, 2, 1, 150, 0),    -- Sample order detail 2
+    (1, 3, 3, 450, 0),    -- Sample order detail 3
+    (2, 4, 1, 200, 0),    -- Sample order detail 4
+    (2, 5, 4, 600, 0),    -- Sample order detail 5
+    (2, 6, 2, 300, 0),    -- Sample order detail 6
+    (3, 7, 3, 900, 0),    -- Sample order detail 7
+    (3, 8, 2, 1600, 0),   -- Sample order detail 8
+    (3, 9, 1, 800, 0);    -- Sample order detail 9
