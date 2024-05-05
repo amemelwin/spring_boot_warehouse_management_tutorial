@@ -21,8 +21,12 @@
 		<div class="mb-5" th:if="${param.updated}">
 			<span class="alert alert-warning d-flex flex-row">商品変更するのが正常に完了いたしました。</span>
 		</div>
+
+		<div class="mb-5" th:if="${param.deleted}">
+			<span class="alert alert-danger d-flex flex-row">商品を削除しました。</span>
+		</div>
 		
-		<table class="table table-bordered table-striped">
+		<table id="productTable" class="table table-bordered table-striped">
 			<thead class="thead-dark text-center text-white" style="background-color: rgb(132, 132, 132);">
 			  <tr>
 				<th scope="col">ID</th>
@@ -185,14 +189,14 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Are Your Sure</h5>
+		  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Product</h5>
 		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		  </button>
 		</div>
 		<div class="modal-body">
 			<input type="hidden" id="delete-product-id"/>
-			<span class="text-danger h3">Are you sure want to delete?</span>
+			<div class="text-danger h4 text-center">Are you sure want to delete?</div>
 			<a>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam perspiciatis est cupiditate quo saepe eum iste,</a>
 		</div>
 		<div class="modal-footer d-flex justify-content-center">
@@ -202,7 +206,24 @@
 	  </div>
 	</div>
   </div>
+  <!-- common function -->
+  <script>
+	var reload = (param)=>{
+		if(!param){
+			window.location.href = window.location.href;
+			return;
+		}
 
+		if(window.location.href.includes("?")){
+			window.location.href = window.location.href.split("?")[0] + `?${param}`;
+		}else{
+			window.location.href = window.location.href + `?${param}`;
+		}
+	}
+	$(document).ready(function(){
+		$('#productTable').DataTable();
+	})
+  </script>
   <!-- product create -->
   <script>
 	  $(document).ready(function(){
@@ -296,7 +317,7 @@
 					{method, headers, body})
 					.then((response)=>{
 						if (response.ok) {
-							window.location.href = window.location.href + "?success";
+							reload("success")
 						} else {
 							return response.json().then(error => {
 								bindingResult(error);
@@ -315,6 +336,7 @@
   <!-- product update -->
   <script>
 	$(document).ready(function(){
+		
 		/* common element */
 		const updateProductEle = {
 			id: $("#updateProductId"),
@@ -442,7 +464,7 @@
 					{method, headers, body})
 					.then((response)=>{
 						if (response.ok) {
-							window.location.href = window.location.href + "?updated";
+							reload("updated")
 						} else {
 							return response.json().then(error => {
 								bindingResult(error);
@@ -459,7 +481,7 @@
 
 		/* Delete Action */
 		$("#delete-product-action").click(()=>{
-			const url = `api/v1/product/$("#delete-product-id").val()}`
+			const url = `api/v1/product/${$("#delete-product-id").val()}`;
 			const method = "DELETE";
 			const headers = {
 				'Accept': 'application/json',
@@ -470,7 +492,8 @@
 				{method, headers})
 				.then((response)=>{
 					if (response.ok) {
-						window.location.href = window.location.href + "?deleted";
+						reload("deleted");
+						// window.location.href = window.location.href + "?deleted";
 					} else {
 						return response.json().then(error => {
 							// bindingResult(error);
