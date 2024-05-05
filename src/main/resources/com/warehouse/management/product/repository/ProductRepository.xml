@@ -75,9 +75,47 @@
 		LIMIT 1;
 	</select>
 	
+	<select id="updateAndSelectProduct" resultType="com.warehouse.management.product.dto.ProductDto">
+		UPDATE products
+		SET 
+			category_id=#{categoryId},
+			product_name=#{productName},
+			product_code=#{productCode},
+			price=CAST(#{price} AS BIGINT),
+			discount=CAST(#{discount} AS INTEGER),
+			updated_at=NOW()
+		WHERE product_id=#{productId};
+		
+		SELECT 
+			p.product_id productId,
+			p.category_id categoryId,
+			c.category_name categoryName,
+			p.product_name productName,
+			p.product_code productCode,
+			p.price price,
+			p.discount discount,
+			p.created_at createdAt,
+			p.updated_at updatedAt
+		FROM products p
+		LEFT JOIN categories c ON c.category_id = p.category_id
+		WHERE p.product_code=#{productCode}
+		LIMIT 1;
+	</select>
+	
 	<select id="isValidProductCode" resultType="boolean">
 		SELECT NOT COUNT(*)>0 FROM products
 		WHERE LOWER(product_code)=LOWER(#{productCode})
 	</select>
-
+	
+	<select id="isValidUpdateProductCode" resultType="boolean">
+		SELECT NOT COUNT(*)>0 FROM products
+		WHERE 
+		LOWER(product_code)=LOWER(#{productCode})
+		AND product_id != #{productId}
+	</select>
+	
+	<delete id="deleteProduct">
+		DELETE FROM products
+		WHERE product_id=#{productId}
+	</delete>
 </mapper>

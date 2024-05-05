@@ -21,5 +21,11 @@ public interface ProductRepository {
 	
 	public boolean isValidProductCode(@Param("productCode") String productCode);
 	
+	public boolean isValidUpdateProductCode(@Param("productCode") String productCode,@Param("productId") long productId);
+	
 	public ProductDto insertAndSelectProduct(ProductCreateDto productCreateDto);
+	
+	public ProductDto updateAndSelectProduct(ProductCreateDto productCreateDto);
+	
+	public void deleteProduct(@Param("productId") long productId);
 }

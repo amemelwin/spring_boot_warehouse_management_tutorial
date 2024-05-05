@@ -35,4 +35,30 @@ public class ProductApiService {
 
 		return new ApiResponse(HttpStatus.CREATED,"商品登録が正常に完了しました。",registeredProduct).response();
 	}
+	
+	public ResponseEntity<Object> updateProduct(ProductCreateDto productCreateDto){
+		
+		Map<String,String> errors = productCreateDto.validate();
+		
+		if(!productRepository.isValidUpdateProductCode(productCreateDto.getProductCode(),productCreateDto.getProductId())) {
+			errors.put("product_code", "有効の商品コードを入力してください。");
+		}
+
+		if(errors.size()>0) {
+			return new ErrorResponse(HttpStatus.CONFLICT,"商品登録が失敗しました。",errors).response();
+		}
+		
+		ProductDto updatedProduct = productRepository.updateAndSelectProduct(productCreateDto);
+		
+		return new ApiResponse(HttpStatus.OK,"商品変更することが正常に完了しました。",updatedProduct).response();
+	}
+	
+	public ResponseEntity<Object> deleteProduct(long productId){
+		try {
+			productRepository.deleteProduct(productId);
+			return new ApiResponse(HttpStatus.NO_CONTENT,"OK").response();
+		}catch(Exception e) {
+			return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,"NG").response();
+		}
+	}
 }

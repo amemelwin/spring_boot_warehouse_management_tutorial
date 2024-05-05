@@ -17,6 +17,10 @@
 		<div class="mb-5" th:if="${param.success}">
 			<span class="alert alert-success d-flex flex-row">商品登録が正常に完了いたしました。</span>
 		</div>
+
+		<div class="mb-5" th:if="${param.updated}">
+			<span class="alert alert-warning d-flex flex-row">商品変更するのが正常に完了いたしました。</span>
+		</div>
 		
 		<table class="table table-bordered table-striped">
 			<thead class="thead-dark text-center text-white" style="background-color: rgb(132, 132, 132);">
@@ -44,15 +48,31 @@
 				<td style="text-align: right;"><span th:text="*{discount}"></span>%</td>
 				<td style="text-align: right;">14</td>
 				<td class="text-center">
-					<a href="#" class="m-3">Edit</a>
-					<a href="#">Delete</a>
+					<button 
+						action="update" 
+						th:data-id="*{productId}"
+						th:data-name="*{productName}"
+						th:data-code="*{productCode}"
+						th:data-category="*{categoryId}"
+						th:data-price="*{price}"
+						th:data-discount="*{discount}"
+						class="m-3" 
+						data-toggle="modal" data-target="#updateProductModal"
+					>Edit</button>
+					<button 
+						action="delete" 
+						th:data-id="*{productId}"
+						class="btn btn-danger" 
+						data-toggle="modal" 
+						data-target="#deleteProductModal"
+					>Delete</button>
 				</td>
 			  </tr>
 			</tbody>
 		  </table>
 	</div>
 
-  <!-- Modal -->
+  <!-- Create Product Modal -->
   <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
@@ -104,27 +124,106 @@
 	  </div>
 	</div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!-- Update Product Modal -->
+  <div class="modal fade" id="updateProductModal" tabindex="-1" role="dialog" aria-labelledby="updateProductModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLongTitle">Update Product</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<!-- product id  -->
+			<input type="hidden" id="updateProductId"/>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateProductName" class="" style="width: 200px;">Product Name: </label>
+				<input class="form-control" type="text" name="updateProductName" id="updateProductName" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="update-productName-err"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateProductCode" class="" style="width: 200px;">Product Code: </label>
+				<input class="form-control" type="text" name="updateProductCode" id="updateProductCode" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="update-productCode-err"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateCategoryId" style="width: 200px;">Category :</label>
+				<select name="updateCategoryId" id="updateCategoryId" class="form-control">
+					<option th:each="option:${categoryOptions}" th:value="${option.value}" th:text="${option.title}"></option>
+				</select>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updatePrice" class="" style="width: 200px;">price: </label>
+				<input class="form-control" type="text" name="updatePrice" id="updatePrice" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="update-price-err"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateDiscount" class="" style="width: 200px;">Discount: </label>
+				<input class="form-control" type="text" name="updateDiscount" id="updateDiscount" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="update-discount-err"></span>
+			</div>
+		</div>
+		<div class="modal-footer d-flex justify-content-center">
+		  <button type="button" id="update-product-action" class="btn btn-primary">Update</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+  <!-- Delete Product Modal -->
+  <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLongTitle">Are Your Sure</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" id="delete-product-id"/>
+			<span class="text-danger h3">Are you sure want to delete?</span>
+			<a>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam perspiciatis est cupiditate quo saepe eum iste,</a>
+		</div>
+		<div class="modal-footer d-flex justify-content-center">
+			<button type="button" data-toggle="modal" data-target="#deleteProductModal" class="btn btn-success">Cancel</button>
+		  	<button type="button" id="delete-product-action" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+  <!-- product create -->
   <script>
-	$(document).ready(function(){
-		const errorElements = {
-			name: $("#productName-err"),
-			code: $("#productCode-err"),
-			price: $("#price-err"),
-			discount: $("#discount-err")
-		}
-		const createProductData = {
-			categoryId: $("#categoryId"),
-			productName: $("#productName"),
-			productCode: $("#productCode"),
-			price: $("#price"),
-			discount: $("#discount")
-		}
-		const setError = (ele,msg)=>{
-			ele.text(msg);
-			ele.parent().show();
-		}
-		const clearError = ()=>{
+	  $(document).ready(function(){
+		  	const errorElements = {
+			  name: $("#productName-err"),
+			  code: $("#productCode-err"),
+			  price: $("#price-err"),
+			  discount: $("#discount-err")
+			}
+			const createProductData = {
+				categoryId: $("#categoryId"),
+				productName: $("#productName"),
+				productCode: $("#productCode"),
+				price: $("#price"),
+				discount: $("#discount")
+			}
+			const setError = (ele,msg)=>{
+				ele.text(msg);
+				ele.parent().show();
+			}
+			const clearError = ()=>{
 			errorElements.name.parent().hide();
 			errorElements.code.parent().hide();
 			errorElements.price.parent().hide();
@@ -133,7 +232,7 @@
 		const isNumeric = (str) => {
 			if (typeof str != "string") return false // we only process strings!  
 			return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-					!isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+			!isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 		}
 		/* 1. clear error msg & 2. frontend side validate*/
 		const validate = ()=>{
@@ -157,7 +256,7 @@
 			}
 			return validate;
 		}
-
+		
 		const bindingResult = (error)=>{
 			if(error.errors){
 				if(error.errors.product_name){
@@ -195,22 +294,197 @@
 				fetch(
 					url, 
 					{method, headers, body})
-				.then((response)=>{
-					if (response.ok) {
-						window.location.href = window.location.href + "?success";
-					} else {
-						return response.json().then(error => {
-							bindingResult(error);
-							throw new Error('Error response received'); // Throw an error to trigger the catch block
-						});
-					}
-				})
-				.catch((error)=>{
+					.then((response)=>{
+						if (response.ok) {
+							window.location.href = window.location.href + "?success";
+						} else {
+							return response.json().then(error => {
+								bindingResult(error);
+								throw new Error('Error response received'); // Throw an error to trigger the catch block
+							});
+						}
+					})
+					.catch((error)=>{
 					console.log(error);
 				});	
 			}
 		});
 	})
   </script>
+  
+  <!-- product update -->
+  <script>
+	$(document).ready(function(){
+		/* common element */
+		const updateProductEle = {
+			id: $("#updateProductId"),
+			name: $("#updateProductName"),
+			code: $("#updateProductCode"),
+			category: $("#updateCategoryId"),
+			price: $("#updatePrice"),
+			discount: $("#updateDiscount"),
+		}
+
+		const errorElements = {
+			name: $("#update-productName-err"),
+			code: $("#update-productCode-err"),
+			price: $("#update-price-err"),
+			discount: $("#update-discount-err")
+		}
+
+		const clearError = ()=>{
+			errorElements.name.parent().hide();
+			errorElements.code.parent().hide();
+			errorElements.price.parent().hide();
+			errorElements.discount.parent().hide();
+		}
+
+		/* common element */
+		
+		/* Open Update Product Modal */
+		$("button[action='update']").click(function(){
+			const currentProduct = {
+				id: $(this).data('id'),
+				name: $(this).data('name'),
+				code: $(this).data('code'),
+				category: $(this).data('category'),
+				price: $(this).data('price'),
+				discount: $(this).data('discount')
+			}
+
+			/* Load Data */
+			updateProductEle.id.val(currentProduct.id);
+			updateProductEle.name.val(currentProduct.name);
+			updateProductEle.code.val(currentProduct.code);
+			updateProductEle.category.val(currentProduct.category);
+			updateProductEle.price.val(currentProduct.price);
+			updateProductEle.discount.val(currentProduct.discount);
+			
+			clearError();
+		})
+
+		/* Open Delete Product Modal */
+		$("button[action='delete']").click(function(){
+			const productId = $(this).data('id');
+			/* Load Data */
+			$("#delete-product-id").val(productId);
+		})
+
+		/* Update Action */
+		$("#update-product-action").click(()=>{
+			
+			const setError = (ele,msg)=>{
+				ele.text(msg);
+				ele.parent().show();
+			}
+
+			const isNumeric = (str) => {
+				if (typeof str != "string") return false // we only process strings!  
+				return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+				!isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+			}
+			/* 1. clear error msg & 2. frontend side validate*/
+			const validate = ()=>{
+				clearError();
+				let validate = true;
+				if(!updateProductEle.name.val()){
+					setError(errorElements.name,"Product Name is required!");
+					validate=false;
+				}
+				if(!updateProductEle.code.val()){
+					setError(errorElements.code,"Produt Code is required!");
+					validate=false;
+				}
+				if(!isNumeric(updateProductEle.price.val())){
+					setError(errorElements.price,"Price must be number");
+					validate=false;
+				}
+				if(!isNumeric(updateProductEle.discount.val())){
+					setError(errorElements.discount,"Discount must be number");
+					validate=false;
+				}
+				return validate;
+			}
+
+			const bindingResult = (error)=>{
+				if(error.errors){
+					if(error.errors.product_name){
+						setError(errorElements.name,error.errors.product_name);
+					}
+					if(error.errors.product_code){
+						setError(errorElements.code,error.errors.product_code);
+					}
+					if(error.errors.price){
+						setError(errorElements.price,error.errors.price);
+					}
+					if(error.errors.discount){
+						setError(errorElements.discount,error.errors.discount);
+					}
+				}
+			}
+			if(validate()){
+				// 3. api call (fetch)
+				const url = `api/v1/product/${updateProductEle.id.val()}`
+				const method = "PUT";
+				const body = JSON.stringify({
+					category_id: updateProductEle.category.val(),
+					price: updateProductEle.price.val(),
+					discount: updateProductEle.discount.val(),
+					product_code: updateProductEle.code.val(),
+					product_name: updateProductEle.name.val()
+				});
+				const headers = {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				};
+				fetch(
+					url, 
+					{method, headers, body})
+					.then((response)=>{
+						if (response.ok) {
+							window.location.href = window.location.href + "?updated";
+						} else {
+							return response.json().then(error => {
+								bindingResult(error);
+								throw new Error('Error response received'); // Throw an error to trigger the catch block
+							});
+						}
+					})
+					.catch((error)=>{
+					console.log(error);
+				});	
+			}
+			
+		});
+
+		/* Delete Action */
+		$("#delete-product-action").click(()=>{
+			const url = `api/v1/product/$("#delete-product-id").val()}`
+			const method = "DELETE";
+			const headers = {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			};
+			fetch(
+				url, 
+				{method, headers})
+				.then((response)=>{
+					if (response.ok) {
+						window.location.href = window.location.href + "?deleted";
+					} else {
+						return response.json().then(error => {
+							// bindingResult(error);
+							throw new Error('Error response received'); // Throw an error to trigger the catch block
+						});
+					}
+				})
+				.catch((error)=>{
+				console.log(error);
+			});	
+		})
+	
+	})
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -45,7 +45,7 @@ public class ProductCreateDto {
 		if(productCode == null) {
 			errors.put("product_code","商品コードを入力してください。");
 		}else if(productCode.length()<7) {
-			errors.put("product_code","商品コードを長さ4以上で入力してください");
+			errors.put("product_code","商品コードを長さ6以上で入力してください");
 		}
 		// 1.3 p.price > 0
 		if(!(CommonUtility.parseLong(price)>0)) {
