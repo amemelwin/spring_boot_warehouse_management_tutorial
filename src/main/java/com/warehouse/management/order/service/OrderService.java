@@ -27,4 +27,8 @@ public class OrderService {
 	public ResponseEntity<Object> getCustomerDeliveryAddress(int customerId){
 		return new ApiResponse(HttpStatus.OK,"OK",orderRepository.getDeliveryAddressOption(customerId)).response();
 	}
+	
+	public ResponseEntity<Object> getWarehouseProductOption(int addressId){
+		return new ApiResponse(HttpStatus.OK,"OK",orderRepository.getWarehouseProductOption(addressId)).response();
+	}
 }

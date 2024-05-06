@@ -20,4 +20,9 @@ public class ApiOrderController {
 	public ResponseEntity<Object> getCustomerDeliveryAddress(@PathVariable int customerId){
 		return orderService.getCustomerDeliveryAddress(customerId);
 	}
+	
+	@GetMapping("/address/{addressId}/products")
+	public ResponseEntity<Object> getWarehouseProductOption(@PathVariable int addressId){
+		return orderService.getWarehouseProductOption(addressId);
+	}
 }

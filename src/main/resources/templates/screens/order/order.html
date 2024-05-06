@@ -74,26 +74,44 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				
-				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-					<label for="customerId" style="width: 200px;">Customer :</label>
-					<select name="customerId" id="customerId" class="form-control">
-						<option></option>
-						<option th:each="option:${customerOptions}" th:value="${option.value}" th:text="${option.title}"></option>
-					</select>
-				</div>
-
-				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-					<label for="addressId" style="width: 200px;">Delivery Address :</label>
-					<select name="addressId" id="addressId" class="form-control">
-						
-						<!-- <option th:each="option:${customerOptions}" th:value="${option.value}" th:text="${option.title}"></option> -->
-					</select>
+				<!-- Page One -->
+				<div class="createOrderPageOne">
+					<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+						<label for="customerId" style="width: 200px;">Customer :</label>
+						<select name="customerId" id="customerId" class="form-control">
+							<option></option>
+							<option th:each="option:${customerOptions}" th:value="${option.value}" th:text="${option.title}"></option>
+						</select>
+					</div>
+					<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+						<label for="addressId" style="width: 200px;">Delivery Address :</label>
+						<select name="addressId" id="addressId" class="form-control"></select>
+					</div>
 				</div>
 				
+				<!-- Page Two -->
+				<div class="createOrderPageTwo" style="display: none;">
+					<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+						<label for="productId" style="width: 200px;">Product :</label>
+						<select name="productId" id="productId" class="form-control">
+						</select>
+					</div>
+					<!-- <div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+						<label for="addressId" style="width: 200px;">Delivery Address :</label>
+						<select name="addressId" id="addressId" class="form-control"></select>
+					</div> -->
+				</div>
 			</div>
-			<div class="modal-footer d-flex justify-content-center">
-				<button id="next" type="button" class="btn btn-secondary">Next</button>
+			<div class="createOrderPageOne">
+				<div class="modal-footer d-flex justify-content-center">
+					<button id="next" type="button" class="btn btn-secondary">Next</button>
+				</div>
+			</div>
+			<div class="createOrderPageTwo" style="display: none;">
+				<div class="modal-footer d-flex justify-content-center">
+					<button id="prev" type="button" class="btn btn-secondary">Previous</button>
+					<button id="create-order" type="button" class="btn btn-primary">Create Order</button>
+				</div>
 			</div>
 			</div>
 		</div>
@@ -122,19 +140,56 @@
   <script>
 	$(document).ready(function(){
 		
-		const renderAddressSelectOption = (addressOptions)=>{
+		const renderSelectOption = (element,addressOptions)=>{
 			if(addressOptions && addressOptions.length>0){
 				let addressOptionElementStr = '';
 
 				addressOptions.map(({value,title})=>{
 					addressOptionElementStr += `<option value="${value}">${title}</option>`
 				});
-
-				$("#addressId").html(addressOptionElementStr);
+				$(element).html(addressOptionElementStr);
 			}else{
-				$("#addressId").html(`<option value=""></option>`);
+				$(element).html(`<option value=""></option>`);
 			}
 		}
+
+		$("#prev").click(()=>{
+			renderSelectOption($("#productId"),[]);
+			$(".createOrderPageOne").toggle();
+			$(".createOrderPageTwo").toggle();
+		})
+
+		$("#next").click(()=>{
+			$(".createOrderPageOne").toggle();
+			$(".createOrderPageTwo").toggle();
+			const addressId = $("#addressId").val();
+			if(addressId){
+				const url = `api/v1/address/${addressId}/products`;
+				const method = "GET";
+				const headers = {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				};
+				fetch(
+					url, 
+					{method, headers})
+					.then((response)=>{
+						if (response.ok) {
+							return response.json().then((ans)=>{
+								renderSelectOption($("#productId"),ans.data);
+							})
+						} else {
+							return response.json().then(error => {
+								// bindingResult(error);
+								throw new Error('Error response received'); // Throw an error to trigger the catch block
+							});
+						}
+					})
+					.catch((error)=>{
+					console.log(error);
+				});	
+			}
+		})
 
 		$("#customerId").change(function(){
 			const customerId = $(this).val();
@@ -151,7 +206,7 @@
 					.then((response)=>{
 						if (response.ok) {
 							return response.json().then((ans)=>{
-								renderAddressSelectOption(ans.data);
+								renderSelectOption($("#addressId"),ans.data);
 							})
 						} else {
 							return response.json().then(error => {
