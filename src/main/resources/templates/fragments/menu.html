@@ -13,11 +13,11 @@
             <div class="" >WAREHOUSE MANAGEMENT</div>
             <!-- Button -->
             <div class="d-flex flex-row">
-                <button class="btn" th:classappend="${currentRoute=='/product'}? 'btn-secondary': 'btn-outline-secondary'">PRODUCT</button>
-                <button class="btn" th:classappend="${currentRoute=='/category'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">CATEGORY</button>
-                <button class="btn" th:classappend="${currentRoute=='/order'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">ORDER</button>
-                <button class="btn" th:classappend="${currentRoute=='/warehouse'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">WAREHOUSE</button>
-                <button class="btn" th:classappend="${currentRoute=='/customer'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">CUSTOMER</button>
+                <a th:href="@{/product}" class="btn" th:classappend="${currentRoute=='/product'}? 'btn-secondary': 'btn-outline-secondary'">PRODUCT</a>
+                <a th:href="@{/product}" class="btn" th:classappend="${currentRoute=='/category'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">CATEGORY</a>
+                <a th:href="@{/order}" class="btn" th:classappend="${currentRoute=='/order'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">ORDER</a>
+                <a th:href="@{/product}" class="btn" th:classappend="${currentRoute=='/warehouse'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">WAREHOUSE</a>
+                <a th:href="@{/customer}" class="btn" th:classappend="${currentRoute=='/customer'}? 'btn-secondary': 'btn-outline-secondary'" style="margin-left: 15px;">CUSTOMER</a>
             </div>
         </div>
     </div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.warehouse.management.order.repository.OrderRepository">
+	
+	<select id="getCustomerOption" resultType="com.warehouse.management.order.dto.OptionDto">
+		SELECT 
+			customer_id value,
+			CONCAT(first_name,' ',last_name) title
+		FROM customers
+		WHERE deleted_at IS NULL;
+	</select>
+	
+	<select id="getDeliveryAddressOption" resultType="com.warehouse.management.order.dto.OptionDto">
+		SELECT 
+			delivery_address_id value,
+			address_name title
+		FROM delivery_addresses
+		WHERE deleted_at IS NULL AND customer_id=#{customerId};
+	</select>
+</mapper>

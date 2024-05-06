@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.warehouse.management.customer.repository.CustomerRepository">
+	
+	<select id="getCustomers" resultType="com.warehouse.management.customer.dto.CustomerDto">
+		SELECT
+			c.customer_id customerId,
+			c.first_name firstName,
+			c.last_name lastName,
+			c.mail,
+			c.phone,
+			c.point,
+			(SELECT COUNT(*) FROM delivery_addresses WHERE customer_id=c.customer_id) numOfAddress
+		FROM customers c;
+	</select>
+	
+	<select id="getCustomerDeliveryAddress" resultType="com.warehouse.management.customer.dto.CustomerDeliveryAddress">
+		SELECT 
+			da.delivery_address_id deliveryAddressId,
+			da.region_id regionId,
+			(SELECT region_name FROM regions WHERE region_id = da.region_id) regionName,
+			da.address_name addressName,
+			da.address,
+			da.post_code postCode,
+			da.main
+		FROM delivery_addresses da
+		WHERE da.deleted_at IS NULL AND da.customer_id=#{customerId};
+	</select>
+</mapper>
