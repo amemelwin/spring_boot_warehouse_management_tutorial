@@ -26,4 +26,5 @@ public class CustomerService {
 		mav.addObject("deliveryAddresses",customerRepository.getCustomerDeliveryAddress(customerId));
 		return mav;
 	}
+	
 }

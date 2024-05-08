@@ -28,4 +28,35 @@
 		FROM delivery_addresses da
 		WHERE da.deleted_at IS NULL AND da.customer_id=#{customerId};
 	</select>
+	
+	<select id="insertAndSelectCustomer" resultType="com.warehouse.management.customer.dto.CustomerDto">
+		INSERT INTO customers(
+			first_name, 
+			last_name, 
+			mail, 
+			phone, 
+			created_at, 
+			updated_at
+			)
+		VALUES ( 
+			#{firstName}, 
+			#{lastName}, 
+			#{mail}, 
+			#{phone}, 
+			NOW(), 
+			NOW()
+		);
+		
+		SELECT 
+		    customer_id AS customerId,
+		    first_name AS firstName,
+		    last_name AS lastName,
+		    mail,
+		    phone
+		FROM 
+		    customers
+		WHERE 
+		    deleted_at IS NULL AND mail = #{mail}
+		LIMIT 1;		
+	</select>
 </mapper>

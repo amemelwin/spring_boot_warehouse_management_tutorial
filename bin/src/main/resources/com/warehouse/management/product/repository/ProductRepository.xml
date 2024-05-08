@@ -16,7 +16,7 @@
 		p.created_at createdAt,
 		p.updated_at updatedAt
 	FROM products p
-	LEFT JOIN categories c ON c.category_id = p.category_id AND p.deleted_at IS NULL
+	LEFT JOIN categories c ON c.category_id = p.category_id
 	ORDER BY p.product_id DESC;
 	</select>
 	
@@ -24,8 +24,7 @@
 		SELECT 
 			category_id value,
 			category_name title
-		FROM categories
-		WHERE deleted_at IS NULL;
+		FROM categories;
 	</select>
 
 	<insert id="createProduct">
@@ -72,7 +71,7 @@
 			p.updated_at updatedAt
 		FROM products p
 		LEFT JOIN categories c ON c.category_id = p.category_id
-		WHERE p.product_code=#{productCode} AND p.deleted_at IS NULL
+		WHERE p.product_code=#{productCode}
 		LIMIT 1;
 	</select>
 	
@@ -99,27 +98,24 @@
 			p.updated_at updatedAt
 		FROM products p
 		LEFT JOIN categories c ON c.category_id = p.category_id
-		WHERE p.product_code=#{productCode}  AND p.deleted_at IS NULL
+		WHERE p.product_code=#{productCode}
 		LIMIT 1;
 	</select>
 	
 	<select id="isValidProductCode" resultType="boolean">
 		SELECT NOT COUNT(*)>0 FROM products
-		WHERE LOWER(product_code)=LOWER(#{productCode})  AND deleted_at IS NULL
+		WHERE LOWER(product_code)=LOWER(#{productCode})
 	</select>
 	
 	<select id="isValidUpdateProductCode" resultType="boolean">
 		SELECT NOT COUNT(*)>0 FROM products
 		WHERE 
 		LOWER(product_code)=LOWER(#{productCode})
-		AND product_id != #{productId}  AND deleted_at IS NULL
+		AND product_id != #{productId}
 	</select>
 	
 	<delete id="deleteProduct">
-		<!-- DELETE FROM products
-		WHERE product_id=#{productId} -->
-		UPDATE products
-		SET deleted_at = NOW()
-		WHERE product_id = #{productId};
+		DELETE FROM products
+		WHERE product_id=#{productId}
 	</delete>
 </mapper>

@@ -8,21 +8,21 @@
 	<div style="margin-top: 130px;"></div>
 	
 	<div class="container" style="margin-bottom: 50px;">
-		<a class="btn btn-primary">Add Customer</a>
+		<a class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">Add Customer</a>
 	</div>
 	
-	<!-- product table -->
+	<!-- Customer table -->
 	<div class="container">
 		<div class="mb-5" th:if="${param.success}">
-			<span class="alert alert-success d-flex flex-row">商品登録が正常に完了いたしました。</span>
+			<span class="alert alert-success d-flex flex-row">顧客様登録が正常に完了いたしました。</span>
 		</div>
 
 		<div class="mb-5" th:if="${param.updated}">
-			<span class="alert alert-warning d-flex flex-row">商品変更するのが正常に完了いたしました。</span>
+			<span class="alert alert-warning d-flex flex-row">顧客様変更するのが正常に完了いたしました。</span>
 		</div>
 
 		<div class="mb-5" th:if="${param.deleted}">
-			<span class="alert alert-danger d-flex flex-row">商品を削除しました。</span>
+			<span class="alert alert-danger d-flex flex-row">顧客様を削除しました。</span>
 		</div>
 		
 		<table id="customerTable" class="table table-bordered table-striped">
@@ -64,14 +64,67 @@
 		  </table>
 	</div>
 
-  <!-- common function -->
-  <script>
+	<!-- Create Customer Modal -->
+	  <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLongTitle">Add New Customer</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+					<label for="firstName" class="" style="width: 200px;">First Name: </label>
+					<input class="form-control" type="text" name="firstName" id="firstName" />
+				</div>
+				<div style="margin-top: 10px;display: none;">
+					<span class="alert alert-warning d-flex flex-row" id="firstName-err"></span>
+				</div>			
+				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+					<label for="lastName" class="" style="width: 200px;">Last Name: </label>
+					<input class="form-control" type="text" name="lastName" id="lastName" />
+				</div>
+				<div style="margin-top: 10px;display: none;">
+					<span class="alert alert-warning d-flex flex-row" id="lastName-err"></span>
+				</div>
+				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+					<label for="email" class="" style="width: 200px;">Email: </label>
+					<input class="form-control" type="email" name="email" id="email" />
+				</div>
+				<div style="margin-top: 10px;display: none;">
+					<span class="alert alert-warning d-flex flex-row" id="email-err"></span>
+				</div>
+				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+					<label for="phone" class="" style="width: 200px;">Phone: </label>
+					<input class="form-control" type="tel" name="phone" id="phone" />
+				</div>
+				<div style="margin-top: 10px;display: none;">
+					<span class="alert alert-warning d-flex flex-row" id="phone-err"></span>
+				</div>
+				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+					<label for="address" class="" style="width: 200px;">Address: </label>
+					<input class="form-control" type="text" name="address" id="address" />
+				</div>
+				<div style="margin-top: 10px;display: none;">
+					<span class="alert alert-warning d-flex flex-row" id="address-err"></span>
+				</div>
+			</div>
+			<div class="modal-footer d-flex justify-content-center">
+			  <button type="button" id="add-customer-action" class="btn btn-primary">Submit</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+  	<!-- common function -->
+	<script>
 	var reload = (param)=>{
 		if(!param){
 			window.location.href = window.location.href;
 			return;
 		}
-
+	
 		if(window.location.href.includes("?")){
 			window.location.href = window.location.href.split("?")[0] + `?${param}`;
 		}else{
@@ -81,14 +134,109 @@
 	$(document).ready(function(){
 		$('#customerTable').DataTable();
 	})
-  </script>
-  <!-- product create -->
-  <script>
+	 </script>
+	<!-- Customer create -->
+	<script>
 	$(document).ready(function(){
-		  
+		const errorElements = {
+			  firstName: $("#firstName-err"),
+			  lastName:$("#lastName-err"),
+			  email: $("#email-err"),
+			  phone: $("#phone-err"),
+			  address: $("#address-err")
+			}
+			const createCustomerData  = {
+				firstName:  $("#firstName"),
+				lastName:$("#lastName"),
+				email :  $("#email"),
+				phone :  $("#phone"),
+				address :  $("#address")
+			}
+			const setError = (ele,msg)=>{
+				ele.text(msg);
+				ele.parent().show();
+			}
+			const clearError = ()=>{
+			errorElements.firstName.parent().hide();
+			errorElements.lastName.parent().hide();
+			errorElements.email.parent().hide();
+			errorElements.phone.parent().hide();
+			errorElements.address.parent().hide();
+		}
+		const validate = ()=>{
+			clearError();
+			let validate = true;
+			if(!createCustomerData.firstName.val()){
+				setError(errorElements.firstName,"First Name is required!");
+				validate=false;
+			}	
+			if(!createCustomerData.lastName.val()){
+				setError(errorElements.lastName,"Last Name is required!");
+				validate=false;
+			}			
+			if(!createCustomerData.email.val()){
+				setError(errorElements.email,"Email is required!");
+				validate=false;
+			}			
+			if(!createCustomerData.phone.val()){
+				setError(errorElements.phone,"Phone is required!");
+				validate=false;
+			}			
+			if(!createCustomerData.address.val()){
+				setError(errorElements.address,"Address is required!");
+				validate=false;
+			}			
+			return validate;
+		}
+		
+		
+		/* Add Customer Action */
+		$("#add-customer-action").click(function(){
+			// 3. api call (fetch)
+			if(validate()){
+				const url = "api/v1/customer"
+				const method = "POST";
+				const body = JSON.stringify({
+				first_name: createCustomerData.firstName.val(),
+				last_name: createCustomerData.firstName.val(),
+				mail: createCustomerData.email.val(),
+				phone: createCustomerData.phone.val(),
+				address: createCustomerData.address.val()				
+			});
+			const headers = {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			};
+			fetch(
+				url, 
+				{method, headers, body})
+				.then((response)=>{
+					console.log(response)
+					if (response.ok) {
+						if (response.ok) {
+							reload("sucess ")
+						} else {
+							return response.json().then(error => {
+								bindingResult(error);
+								throw new Error('Error response received'); // Throw an error to trigger the catch block
+							});
+						}
+						
+					} else {
+						return response.json().then(error => {
+							//bindingResult(error);
+							throw new Error('Error response received'); // Throw an error to trigger the catch block
+						});
+					}
+				})
+				.catch((error)=>{
+				console.log(error);
+			});	
+			}
+		});
 	})
-  </script>
-  
+	 </script>
+	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
