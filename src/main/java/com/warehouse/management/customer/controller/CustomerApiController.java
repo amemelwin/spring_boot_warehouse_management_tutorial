@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.warehouse.management.customer.dto.CustomerCreateDto;
 import com.warehouse.management.customer.service.CustomerApiService;
-import com.warehouse.management.product.dto.ProductCreateDto;
-import com.warehouse.management.utility.ApiResponse;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -30,6 +28,9 @@ public class CustomerApiController {
 	
 	@PutMapping("/customer/{customerId}")
 	public ResponseEntity<Object> updateCustomer(@RequestBody CustomerCreateDto customerCreateDto,@PathVariable long customerId){
+		
+		// customerCreateDto.setCustomerId(customerId);
+		
 		return customerApiService.updateCustomer(customerCreateDto, customerId);
 	}
 	

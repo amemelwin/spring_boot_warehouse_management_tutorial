@@ -35,6 +35,9 @@ public class CustomerCreateDto {
 		if (firstName == null) {
 			errors.put("first_name", "名を記入してください。");
 		}
+//		else if(firstName !=null && firstName.equals("")) {
+//			errors.put("first_name", "名を記入してください。");
+//		}
 
 		if (lastName == null) {
 			errors.put("last_name", "姓を記入してください。");
