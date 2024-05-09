@@ -15,18 +15,49 @@ import com.warehouse.management.utility.ErrorResponse;
 
 @Service
 public class CustomerApiService {
-	
+
 	@Autowired
 	private CustomerRepository customerRepository;
-	
-	public ResponseEntity<Object> createCustomer(CustomerCreateDto customerCreateDto){
-		Map<String,String> errors = customerCreateDto.validate();
-		if(errors.size()>0) {
-			return new ErrorResponse(HttpStatus.CONFLICT,"顧客様登録が失敗しました。",errors).response();
+
+	public ResponseEntity<Object> createCustomer(CustomerCreateDto customerCreateDto) {
+		Map<String, String> errors = customerCreateDto.validate();
+		if (errors.size() > 0) {
+			return new ErrorResponse(HttpStatus.CONFLICT, "顧客様登録が失敗しました。", errors).response();
 		}
-		
+
 		CustomerDto customerDto = customerRepository.insertAndSelectCustomer(customerCreateDto);
-		return new ApiResponse(HttpStatus.OK,"顧客様登録が成功しました。",customerDto).response();
+		return new ApiResponse(HttpStatus.CREATED, "顧客様登録が成功しました。", customerDto).response();
+	}
+
+	public ResponseEntity<Object> updateCustomer(CustomerCreateDto customerCreateDto, long customerId) {
+
+		try {
+			if (!customerRepository.isValidMail(customerCreateDto.getMail(), customerId)) {
+				return new ErrorResponse(HttpStatus.CONFLICT, "メールアドレスは無効です。").response();
+			}
+
+			Map<String, String> errors = customerCreateDto.validate();
+			if (errors.size() > 0) {
+				return new ErrorResponse(HttpStatus.CONFLICT, "顧客様更新が失敗しました。", errors).response();
+			}
+
+			CustomerDto customerDto = customerRepository.updateAndSelectCustomer(customerCreateDto, customerId);
+
+			return new ApiResponse(HttpStatus.OK, "顧客様更新が成功しました。", customerDto).response();
+		} catch (Exception e) {
+			return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "サーバーエラーが発生しました。").response();
+		}
+
+	}
+	
+	public ResponseEntity<Object> deleteCustomer(long customerId){
+		try {
+			customerRepository.deleteCustomer(customerId);
+			return new ApiResponse(HttpStatus.NO_CONTENT, "顧客削除が成功しました。").response();
+
+		}catch (Exception e) {
+			return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "サーバーエラーが発生しました。").response();
+		}
 	}
 
 }

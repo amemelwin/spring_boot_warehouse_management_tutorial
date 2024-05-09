@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" >
-<head th:insert="fragments/header.html::head('Product')"></head>
+<head th:insert="fragments/header.html::head('Customer')"></head>
 <body>
 	<!-- Menu -->
 	<div th:replace="fragments/menu.html::menu(currentRoute='/customer')"></div>
@@ -54,9 +54,21 @@
 					<a th:href="@{'/customer/'+*{customerId}+'/address'}">addresses</a>
 					<button 
 						action="update" 
+						th:data-id="*{customerId}"
+						th:data-firstname="*{firstName}"
+						th:data-lastname="*{lastName}"
+						th:data-phone="*{phone}"
+						th:data-mail="*{mail}"
+						class="m-3" 
+						data-toggle="modal" 
+						data-target="#updateCustomerModal" 
 					>Edit</button>
 					<button 
 						action="delete" 
+						th:data-id="*{customerId}"					
+						class="m-3" 
+						data-toggle="modal" 
+						data-target="#deleteCustomerModal"
 					>Delete</button>
 				</td>
 			  </tr>
@@ -117,8 +129,88 @@
 		  </div>
 		</div>
 	  </div>
+  	 <!-- Update Customer Modal -->
+  <div class="modal fade" id="updateCustomerModal" tabindex="-1" role="dialog" aria-labelledby="updateCustomerModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLongTitle">Update Customer</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<!-- customer id  -->
+			<input type="hidden" id="updateCustomerId"/>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateFirstName" class="" style="width: 200px;">First Name: </label>
+				<input class="form-control" type="text" name="updateFirstName" id="updateFirstName" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="updateFirstName-err"></span>
+			</div>			
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateLastName" class="" style="width: 200px;">Last Name: </label>
+				<input class="form-control" type="text" name="updateLastName" id="updateLastName" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="updatedLastName-err"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateEmail" class="" style="width: 200px;">Email: </label>
+				<input class="form-control" type="email" name="updateEmail" id="updateEmail" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="updateEmail-err"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updatePhone" class="" style="width: 200px;">Phone: </label>
+				<input class="form-control" type="tel" name="updatePhone" id="updatePhone" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="updatedPhone-err"></span>
+			</div>
+			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+				<label for="updateAddress" class="" style="width: 200px;">Address: </label>
+				<input class="form-control" type="text" name="updateAddress" id="updateAddress" />
+			</div>
+			<div style="margin-top: 10px;display: none;">
+				<span class="alert alert-warning d-flex flex-row" id="updateAddress-err"></span>
+			</div>		
+		</div>
+		<div class="modal-footer d-flex justify-content-center">
+		  <button type="button" id="update-customer-action" class="btn btn-primary">Update</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+  	 <!-- Delete Customer Modal -->
+  <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Customer</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" id="delete-customer-id"/>
+			<div class="text-danger h4 text-center">Are you sure want to delete?</div>
+			<a>Lorem ipsum dolor sit amet consectetur </a>
+		</div>
+		<div class="modal-footer d-flex justify-content-center">
+			<button type="button" data-toggle="modal" data-target="#deleteCustomerModal" class="btn btn-success">Cancel</button>
+		  	<button type="button" id="delete-customer-action" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+  </div>
   	<!-- common function -->
 	<script>
+	const init =()=>{
+		$('#customerTable').DataTable();
+	}
 	var reload = (param)=>{
 		if(!param){
 			window.location.href = window.location.href;
@@ -132,7 +224,7 @@
 		}
 	}
 	$(document).ready(function(){
-		$('#customerTable').DataTable();
+		init();
 	})
 	 </script>
 	<!-- Customer create -->
@@ -163,6 +255,28 @@
 			errorElements.phone.parent().hide();
 			errorElements.address.parent().hide();
 		}
+		
+		const bindingResult = (error)=>{
+			if(error.errors){
+				if(error.errors.first_name){
+					setError(errorElements.firstName,error.errors.first_name);
+				}
+				if(error.errors.last_name){
+					setError(errorElements.lastName,error.errors.last_name);
+				}
+				if(error.errors.phone){
+					setError(errorElements.phone,error.errors.phone);
+				}
+				if(error.errors.mail){
+					//console.log(errorElements.mail,error.errors.mail);
+					setError(errorElements.email,error.errors.mail);
+				}
+				if(error.errors.address){
+					setError(errorElements.address,error.errors.address);
+				}
+			}
+		}
+			
 		const validate = ()=>{
 			clearError();
 			let validate = true;
@@ -211,23 +325,15 @@
 				url, 
 				{method, headers, body})
 				.then((response)=>{
-					console.log(response)
 					if (response.ok) {
-						if (response.ok) {
-							reload("sucess ")
-						} else {
-							return response.json().then(error => {
-								bindingResult(error);
-								throw new Error('Error response received'); // Throw an error to trigger the catch block
-							});
-						}
-						
+						reload("sucess ");
 					} else {
 						return response.json().then(error => {
-							//bindingResult(error);
+							bindingResult(error);
 							throw new Error('Error response received'); // Throw an error to trigger the catch block
 						});
-					}
+					}					
+					
 				})
 				.catch((error)=>{
 				console.log(error);
@@ -236,7 +342,187 @@
 		});
 	})
 	 </script>
-	
+	<!-- Customer update -->
+  <script>
+	$(document).ready(function(){
+		/* common element */
+		const updateCustomerEle = {
+			id: $("#updateCustomerId"),
+			firstName: $("#updateFirstName"),
+			lastName: $("#updateLastName"),
+			mail: $("#updateEmail"),
+			phone: $("#updatePhone"),
+			address: $("#updateAddress")
+		}
+		
+		const errorElements = {
+			firstName: $("#updateFirstName-err"),
+			lastName: $("#updateLastName-err"),
+			mail: $("#updateEmail-err"),
+			phone: $("#updatePhone-err"),
+			address: $("#updateAddress-err")
+		}
+		
+		const clearError = ()=>{
+			errorElements.firstName.parent().hide();
+			errorElements.lastName.parent().hide();
+			errorElements.mail.parent().hide();
+			errorElements.phone.parent().hide();
+			errorElements.address.parent().hide();
+		}
+		
+		/* common element */
+		
+		/* Open Update Customer Modal */
+		$("button[action='update']").click(function(){
+			const currentCustomer = {
+				customerId: $(this).data('id'),
+				firstName: $(this).data('firstname'),
+				lastName: $(this).data('lastname'),
+				phone: $(this).data('phone'),
+				mail: $(this).data('mail')
+			}
+
+			/* Load Data */
+			updateCustomerEle.id.val(currentCustomer.customerId);
+			updateCustomerEle.firstName.val(currentCustomer.firstName);
+			updateCustomerEle.lastName.val(currentCustomer.lastName);
+			updateCustomerEle.phone.val(currentCustomer.phone);
+			updateCustomerEle.mail.val(currentCustomer.mail);			
+			clearError();
+		})
+
+		/* Open Delete customer Modal */
+		$("button[action='delete']").click(function(){
+			const customerId = $(this).data('id');
+			/* Load Data */
+			$("#delete-customer-id").val(customerId);
+		})
+
+		/* Update Action */
+		$("#update-customer-action").click(()=>{
+			
+			const setError = (ele,msg)=>{
+				ele.text(msg);
+				ele.parent().show();
+			}
+
+			const isNumeric = (str) => {
+				if (typeof str != "string") return false 
+				return !isNaN(str) && 
+				!isNaN(parseFloat(str)); 
+			}
+			
+			const bindingResult = (error)=>{
+				if(error.errors){
+					if(error.errors.first_name){
+						setError(errorElements.firstName,error.errors.first_name);
+					}
+					if(error.errors.last_name){
+						setError(errorElements.lastName,error.errors.last_name);
+					}
+					if(error.errors.phone){
+						setError(errorElements.phone,error.errors.phone);
+					}
+					if(error.errors.mail){
+						setError(errorElements.mail,error.errors.mail);
+					}
+					if(error.errors.address){
+						setError(errorElements.address,error.errors.address);
+					}
+				}
+			}
+			
+			/* 1. clear error msg & 2. frontend side validate*/
+			const validate = ()=>{
+				clearError();
+				let validate = true;
+				if(!updateCustomerEle.firstName.val()){
+					setError(errorElements.firstName,"First Name is required!");
+					validate=false;
+				}
+				if(!updateCustomerEle.lastName.val()){
+					setError(errorElements.lastName,"Last Name is required!");
+					validate=false;
+				}
+				if(!updateCustomerEle.mail.val()){
+					setError(errorElements.mail,"Mail is required!");
+					validate=false;
+				}				
+				if(!updateCustomerEle.phone.val()){
+					setError(errorElements.phone,"Phone is required!");
+					validate=false;
+				}
+				if(!updateCustomerEle.address.val()){
+					setError(errorElements.address,"Address is required!");
+					validate=false;
+				}				
+				return validate;
+			}
+			
+			if(validate()){
+				// 3. api call (fetch)
+				const url = `api/v1/customer/${updateCustomerEle.id.val()}`
+				const method = "PUT";
+				const body = JSON.stringify({
+					first_name: updateCustomerEle.firstName.val(),
+					last_name: updateCustomerEle.lastName.val(),
+					mail: updateCustomerEle.mail.val(),
+					phone: updateCustomerEle.phone.val(),
+					address: updateCustomerEle.address.val()
+				});
+				const headers = {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				};
+				fetch(
+					url, 
+					{method, headers, body})
+					.then((response)=>{
+						if (response.ok) {
+							reload("updated");
+							init();
+						} else {
+							return response.json().then(error => {
+								bindingResult(error);
+								throw new Error('Error response received'); // Throw an error to trigger the catch block
+							});
+						}
+					})
+					.catch((error)=>{
+					console.log(error);
+				});	
+			}
+			
+		});
+
+		/* Delete Action */
+		$("#delete-customer-action").click(()=>{
+			const url = `api/v1/customer/${$("#delete-customer-id").val()}`;
+			const method = "DELETE";
+			const headers = {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			};
+			fetch(
+				url, 
+				{method, headers})
+				.then((response)=>{
+					if (response.ok) {
+						reload("deleted");
+					} else {
+						return response.json().then(error => {
+							bindingResult(error);
+							throw new Error('Error response received'); // Throw an error to trigger the catch block
+						});
+					}
+				})
+				.catch((error)=>{
+				console.log(error);
+			});	
+		})
+	})
+	</script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

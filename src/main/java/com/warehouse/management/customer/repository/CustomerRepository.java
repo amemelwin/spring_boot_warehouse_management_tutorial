@@ -17,4 +17,10 @@ public interface CustomerRepository {
 	public ArrayList<CustomerDeliveryAddress> getCustomerDeliveryAddress(@Param("customerId") int customerId);
 	
 	public CustomerDto insertAndSelectCustomer(CustomerCreateDto customerCreateDto);
+	
+	public boolean isValidMail(String mail, long customerId);
+	
+	public CustomerDto updateAndSelectCustomer(CustomerCreateDto customerCreateDto,long customerId);
+	
+	public void deleteCustomer(long customerId);
 }

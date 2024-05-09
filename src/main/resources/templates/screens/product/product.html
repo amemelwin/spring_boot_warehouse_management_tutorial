@@ -208,6 +208,9 @@
   </div>
   <!-- common function -->
   <script>
+	const init = ()=>{
+		$('#productTable').DataTable();
+	}
 	var reload = (param)=>{
 		if(!param){
 			window.location.href = window.location.href;
@@ -220,8 +223,9 @@
 			window.location.href = window.location.href + `?${param}`;
 		}
 	}
+
 	$(document).ready(function(){
-		$('#productTable').DataTable();
+		init();
 	})
   </script>
   <!-- product create -->
@@ -464,7 +468,8 @@
 					{method, headers, body})
 					.then((response)=>{
 						if (response.ok) {
-							reload("updated")
+							reload("updated");
+							//init();
 						} else {
 							return response.json().then(error => {
 								bindingResult(error);

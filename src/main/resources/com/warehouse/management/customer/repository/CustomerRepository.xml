@@ -13,7 +13,8 @@
 			c.phone,
 			c.point,
 			(SELECT COUNT(*) FROM delivery_addresses WHERE customer_id=c.customer_id) numOfAddress
-		FROM customers c;
+		FROM customers c
+		WHERE c.deleted_at IS NULL ;
 	</select>
 	
 	<select id="getCustomerDeliveryAddress" resultType="com.warehouse.management.customer.dto.CustomerDeliveryAddress">
@@ -59,4 +60,41 @@
 		    deleted_at IS NULL AND mail = #{mail}
 		LIMIT 1;		
 	</select>
+
+	<select id="isValidMail" resultType="boolean">
+		 SELECT NOT EXISTS (
+	         SELECT 1 
+	         FROM customers 
+	         WHERE customer_id != #{customerId} AND mail = #{mail}
+	     );
+	</select>
+	
+	<select id="updateAndSelectCustomer" resultType="com.warehouse.management.customer.dto.CustomerDto">
+		UPDATE customers
+		SET 
+			first_name = #{customerCreateDto.firstName},
+            last_name = #{customerCreateDto.lastName},
+            mail = #{customerCreateDto.mail},
+            phone = #{customerCreateDto.phone},
+            updated_at = NOW()
+		WHERE customer_id= #{customerId} ;
+		
+		SELECT 
+		    customer_id AS customerId,
+		    first_name AS firstName,
+		    last_name AS lastName,
+		    mail,
+		    phone
+		FROM 
+		    customers
+		WHERE 
+		    deleted_at IS NULL AND customer_id = #{customerId}
+		LIMIT 1;		
+	</select>
+	
+	<delete id="deleteCustomer">
+		UPDATE customers
+		SET deleted_at = NOW()
+		WHERE customer_id = #{customerId};
+	</delete>
 </mapper>
