@@ -32,29 +32,32 @@ public class CustomerCreateDto {
 		if (firstName == null) {
 			errors.put("first_name", "名を記入してください。");
 		}
-//		else if(firstName !=null && firstName.equals("")) {
-//			errors.put("first_name", "名を記入してください。");
-//		}
+		else if(firstName !=null && firstName.equals("")) {
+			errors.put("first_name", "名を記入してください。");
+		}
 
 		if (lastName == null) {
 			errors.put("last_name", "姓を記入してください。");
+		}else if(lastName != null && lastName.equals("")) {
+			errors.put("last_name", "");
 		}
 
 		if (mail == null) {
 			errors.put("mail", "メールにご記入ください");
 		} else {
 			if (!CommonUtility.isValidEmail(mail)) {
-				errors.put("mail", "有効な電子メール形式を入力してください");
+				errors.put("mail", "有効なメール形式を入力してください");
 			}
 		}
 
 		if (phone == null) {
 			errors.put("phone", "電話番号を記入してください");
-		} else {
-			if (!CommonUtility.isValidMyanmarPhoneNumber(phone)) {
-				errors.put("phone", "有効な電話番号の形式を入力してください");
-			}
-		}
+		} 
+//		else {
+//			if (!CommonUtility.isValidMyanmarPhoneNumber(phone)) {
+//				errors.put("phone", "有効な電話番号の形式を入力してください");
+//			}
+//		}
 
 		return errors;
 	}

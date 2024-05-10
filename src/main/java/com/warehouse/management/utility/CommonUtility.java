@@ -32,7 +32,7 @@ public class CommonUtility {
     }
     
     // Phone Format validation
-    private static final String PHONE_REGEX = "^\\+95 \\([0-9]\\) \\d{3} \\d{4}$";
+    private static final String PHONE_REGEX = "\"^09\\\\d{9}$\"";
 
     private static final Pattern phonePattern = Pattern.compile(PHONE_REGEX);
 

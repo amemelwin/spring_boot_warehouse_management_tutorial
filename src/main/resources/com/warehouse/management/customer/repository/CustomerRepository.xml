@@ -62,20 +62,18 @@
 	</select>
 
 	<select id="isValidMail" resultType="boolean">
-		 SELECT NOT EXISTS (
-	         SELECT 1 
-	         FROM customers 
-	         WHERE customer_id != #{customerId} AND mail = #{mail}
-	     );
+		SELECT NOT COUNT(*)>0
+		FROM customers 
+		WHERE customer_id != #{customerId} AND mail = #{mail};
 	</select>
 	
 	<select id="updateAndSelectCustomer" resultType="com.warehouse.management.customer.dto.CustomerDto">
 		UPDATE customers
 		SET 
-			first_name = #{customerCreateDto.firstName},
-            last_name = #{customerCreateDto.lastName},
-            mail = #{customerCreateDto.mail},
-            phone = #{customerCreateDto.phone},
+			first_name = #{firstName},
+            last_name = #{lastName},
+            mail = #{mail},
+            phone = #{phone},
             updated_at = NOW()
 		WHERE customer_id= #{customerId} ;
 		

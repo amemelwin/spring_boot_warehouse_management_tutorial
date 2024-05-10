@@ -20,7 +20,7 @@ public interface CustomerRepository {
 	
 	public boolean isValidMail(String mail, long customerId);
 	
-	public CustomerDto updateAndSelectCustomer(CustomerCreateDto customerCreateDto,long customerId);
+	public CustomerDto updateAndSelectCustomer(CustomerCreateDto customerCreateDto);
 	
 	public void deleteCustomer(long customerId);
 }

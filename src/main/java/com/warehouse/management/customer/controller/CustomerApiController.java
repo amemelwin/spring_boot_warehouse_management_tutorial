@@ -27,11 +27,9 @@ public class CustomerApiController {
 	} 
 	
 	@PutMapping("/customer/{customerId}")
-	public ResponseEntity<Object> updateCustomer(@RequestBody CustomerCreateDto customerCreateDto,@PathVariable long customerId){
-		
-		// customerCreateDto.setCustomerId(customerId);
-		
-		return customerApiService.updateCustomer(customerCreateDto, customerId);
+	public ResponseEntity<Object> updateCustomer(@RequestBody CustomerCreateDto customerCreateDto){		
+		customerCreateDto.setCustomerId(customerCreateDto.getCustomerId());		
+		return customerApiService.updateCustomer(customerCreateDto);
 	}
 	
 	@DeleteMapping("/customer/{customerId}")

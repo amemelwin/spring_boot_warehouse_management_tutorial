@@ -445,6 +445,7 @@
 							init();
 						} else {
 							return response.json().then(error => {
+								console.log("error",error);
 								bindingResult(error);
 								throw new Error('Error response received'); // Throw an error to trigger the catch block
 							});
