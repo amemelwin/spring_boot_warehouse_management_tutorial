@@ -26,9 +26,6 @@ public class CustomerCreateDto {
 	@JsonProperty("phone")
 	private String phone;
 
-	@JsonProperty("address")
-	private String address;
-
 	public Map<String, String> validate() {
 		Map<String, String> errors = new HashMap<String, String>();
 
@@ -57,10 +54,6 @@ public class CustomerCreateDto {
 			if (!CommonUtility.isValidMyanmarPhoneNumber(phone)) {
 				errors.put("phone", "有効な電話番号の形式を入力してください");
 			}
-		}
-
-		if (address == null) {
-			errors.put("address", "住所を記入してください.");
 		}
 
 		return errors;
