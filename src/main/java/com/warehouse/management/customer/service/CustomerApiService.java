@@ -30,6 +30,7 @@ public class CustomerApiService {
 	}
 
 	public ResponseEntity<Object> updateCustomer(CustomerCreateDto customerCreateDto) {
+		System.out.println(customerCreateDto);
 		try {
 			Map<String, String> errors = customerCreateDto.validate();
 			if (!customerRepository.isValidMail(customerCreateDto.getMail(), customerCreateDto.getCustomerId())) {
