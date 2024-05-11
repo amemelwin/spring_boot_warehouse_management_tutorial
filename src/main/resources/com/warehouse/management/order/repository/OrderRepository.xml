@@ -20,13 +20,16 @@
 		WHERE deleted_at IS NULL AND customer_id=#{customerId};
 	</select>
 	
-	<select id="getWarehouseProductOption" resultType="com.warehouse.management.order.dto.OptionDto">
+	<select id="getWarehouseProductOption" resultType="com.warehouse.management.order.dto.OrderDetailDto">
 		SELECT 
-		    wt.warehouse_detail_id	value,
-			(SELECT product_name FROM products WHERE product_id= wt.product_id) title
+			wt.warehouse_detail_id warehouseDetailId,
+			p.product_name productName,
+			p.price,
+			p.discount
 		FROM warehouse_details wt
-		WHERE wt.deleted_at IS NULL AND warehouse_id= (SELECT w.warehouse_id FROM warehouses w
-		WHERE w.region_id=(SELECT region_id FROM delivery_addresses WHERE delivery_address_id=#{addressId}) AND w.deleted_at IS NULL
-		LIMIT 1);
+		LEFT JOIN products p ON p.product_id= wt.product_id
+		WHERE wt.deleted_at IS NULL AND wt.stock>0 AND warehouse_id= (SELECT w.warehouse_id FROM warehouses w
+			WHERE w.region_id=(SELECT region_id FROM delivery_addresses WHERE delivery_address_id=#{addressId}) AND w.deleted_at IS NULL
+			LIMIT 1);
 	</select>
 </mapper>

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.warehouse.management.order.dto.OptionDto;
+import com.warehouse.management.order.dto.OrderDetailDto;
 
 @Mapper
 public interface OrderRepository {
@@ -14,5 +15,5 @@ public interface OrderRepository {
 	
 	public ArrayList<OptionDto> getDeliveryAddressOption(@Param("customerId") int customerId);
 	
-	public ArrayList<OptionDto> getWarehouseProductOption(@Param("addressId") int addressId);
+	public ArrayList<OrderDetailDto> getWarehouseProductOption(@Param("addressId") int addressId);
 }
