@@ -99,7 +99,7 @@
 					<div class="form-group d-flex flex-row align-items-center">
 						<label for="">orderDetails</label>
 						<!-- to orderDetail -->
-						<input class="form-control" id="orderDetails"/>
+						<input class="form-control" id="orderDetails" value="[]"/>
 					</div>
 					<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
 						<label for="productId" style="width: 200px;">Product :</label>
@@ -111,20 +111,33 @@
 						<input disabled type="text" name="productPrice" id="productPrice" class="form-control"/>
 					</div>
 					<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-						<label for="productDiscount" style="width: 200px;">Discount :</label>
+						<label for="productDiscount" style="width: 200px;">Discount % :</label>
 						<input disabled type="text" name="productDiscount" id="productDiscount" class="form-control"/>
 					</div>
 					<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
 						<label for="productQty" style="width: 200px;">Qty :</label>
-						<input type="text" name="productQty" id="productQty" value="0" class="form-control"/>
+						<input type="text" name="productQty" id="productQty" value="1" class="form-control"/>
+					</div>
+					<div style="display: none;">
+						<span id="add-product-err" class="alert alert-warning"></span>
 					</div>
 					<div class="d-flex justify-content-center">
 						<button class="btn btn-success" id="add-product-btn">Add Product</button>
 					</div>
-					<!-- <div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-						<label for="addressId" style="width: 200px;">Delivery Address :</label>
-						<select name="addressId" id="addressId" class="form-control"></select>
-					</div> -->
+					<table class="table table-bordered" style="margin-top: 20px;display: none;">
+						<thead>
+						  <tr>
+							<th scope="col">No.</th>
+							<th scope="col">Product</th>
+							<th scope="col">Price</th>
+							<th scope="col">Qty</th>
+							<th scope="col">Total</th>
+						  </tr>
+						</thead>
+						<tbody id="table-body">
+							<!-- Inject Here -->
+						</tbody>
+					  </table>
 				</div>
 				<div style="display: none;margin-top: 30px;">
 					<span class="alert alert-warning" id="createOrderErr"></span>
@@ -166,7 +179,81 @@
   </script>
   <!-- order create -->
   <script>
+	const removeProduct = (warehouse_detail_id)=>{
+		warehouse_detail_id = parseInt(warehouse_detail_id);
+		const orderDetailsStr = $("#orderDetails").val();
+		let orderDetailsArr = JSON.parse(orderDetailsStr);
+		orderDetailsArr = orderDetailsArr.filter(({warehouse_detail_id: id})=>id!=warehouse_detail_id);
+		$("#orderDetails").val(JSON.stringify(orderDetailsArr));
+		renderTable();
+	}
+
+	const renderTable = ()=>{
+		const orderDetailsStr = $("#orderDetails").val();
+		let orderDetailsArr = JSON.parse(orderDetailsStr);
+		// Inject table
+		const tableBodyEle = $("#table-body");
+		if(orderDetailsArr.length>0){
+			tableBodyEle.parent().show();
+		}else{
+			tableBodyEle.parent().hide();
+			return;
+		}
+		const warehouseDetailsStr = $("#warehouseDetails").val();
+		const warehouseDetails = JSON.parse(warehouseDetailsStr);
+		let html = "";
+		let tax = 0;
+		let grandTotal = 0;
+		orderDetailsArr.map(({warehouse_detail_id,qty},index)=>{
+			const [currentWarehouseDetail] = warehouseDetails.filter(({warehouseDetailId:id})=>id==warehouse_detail_id);
+			if(currentWarehouseDetail){
+				let {warehouseDetailId,price,discount,productName} = currentWarehouseDetail;
+				price = Math.round(price * (1-(discount/100)));
+				const total = price * qty;
+				grandTotal+=total;
+				html+=`
+					<tr>
+						<th scope="row">${index+1} <span class="text-danger" onclick="removeProduct(${warehouseDetailId})">(-)</span></th>
+						<td>${productName}</td>
+						<td style="text-align: right;">${discount>0? '('+discount+'% off)':''} ${price}</td>
+						<td style="text-align: right;">${qty}</td>
+						<td style="text-align: right;">${total}</td>
+					</tr>
+				`;
+			}
+		})
+		tax = Math.round( grandTotal * (0.08) );
+		grandTotal = Math.round( grandTotal * (1.08) );
+		html+=`
+			<tr>
+				<td colspan="4" class="text-center font-weight-bold">Tax</td>
+				<td style="text-align: right;">${tax}</td>
+			</tr>
+			<tr>
+				<td colspan="4" class="text-center font-weight-bold"> Grand Total</td>
+				<td style="text-align: right;">${grandTotal}</td>
+			</tr>
+		`;
+		tableBodyEle.html(html);
+	}
+
+
+
 	$(document).ready(function(){
+
+		const isDecimal = (num)=>{
+			return num%1>0;
+		}
+
+		const setError = (id,msg)=>{
+			const errorEle = $(`#${id}`);
+			if(msg){
+				errorEle.text(msg);
+				errorEle.parent().show();
+			}else{
+				errorEle.parent().hide();
+			}
+		}
 		
 		const renderSelectOption = (element,addressOptions)=>{
 			if(addressOptions && addressOptions.length>0){
@@ -275,17 +362,49 @@
 						const {price,discount} = currentWarehouseDetail;
 						$("#productPrice").val(price);
 						$("#productDiscount").val(discount);
+						$("#productQty").val("1");
 					}
-					
 				}
 				// const [warehouseDetail] = $()
 			}
 		});
 
+		const addProduct = ({warehouse_detail_id,qty})=>{
+			warehouse_detail_id = parseInt(warehouse_detail_id);
+			qty = parseInt(qty);
+			console.log({warehouse_detail_id,qty});
+			const orderDetailsStr = $("#orderDetails").val();
+			let orderDetailsArr = JSON.parse(orderDetailsStr);
+			if(orderDetailsArr.filter(({warehouse_detail_id: id})=>id==warehouse_detail_id).length>0){
+				orderDetailsArr = orderDetailsArr.map(({warehouse_detail_id:id,qty: q})=>{
+					if(id==warehouse_detail_id){
+						q = qty;
+					}
+					return {warehouse_detail_id:id,qty: q};
+				})
+			}else{
+				orderDetailsArr = [...orderDetailsArr,{warehouse_detail_id,qty}];
+			}
+			$("#orderDetails").val(JSON.stringify(orderDetailsArr));
+			renderTable();
+		}
+
 		$("#add-product-btn").click(()=>{
+			setError("add-product-err");
+			// productId productQty add-product-err
 			const warehouseDetailId = $("#productId").val();
 			const qty = $("#productQty").val();
-			console.log(warehouseDetailId,qty);
+			if(warehouseDetailId && qty>0){
+				if(isDecimal(qty)){
+					// setError
+					setError("add-product-err",`注文数${qty}はできません。有効な数字を入力してください。`);
+					return;
+				}
+				addProduct({warehouse_detail_id: warehouseDetailId,qty});
+			}else{
+				// setError
+				setError("add-product-err","商品を選択の上注文数を入力してください。");
+			}
 		})
 	})
   </script>
