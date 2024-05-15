@@ -32,4 +32,43 @@
 			WHERE w.region_id=(SELECT region_id FROM delivery_addresses WHERE delivery_address_id=#{addressId}) AND w.deleted_at IS NULL
 			LIMIT 1);
 	</select>
+	
+	<!-- <select id="isValidOrderId" resultType="boolean">
+		SELECT NOT COUNT(*)>0
+		FROM order_details 
+		WHERE order_id != #{orderId}
+	</select> -->
+	
+	<!-- <select id="createAndSelectOrder" resultType="com.warehouse.management.order.dto.OrderCreateResponseDto">
+		WITH inserted AS (
+	    INSERT INTO order_details(
+	        order_id, 
+	        warehouse_detail_id, 
+	        qty, 
+	        price, 
+	        discount, 
+	        created_at, 
+	        updated_at
+	    )
+	    SELECT
+	        (SELECT order_id FROM orders WHERE customer_id = #{customerId} LIMIT 1), 
+	        #{warehouseDetailId}, 
+	        #{qty}, 
+	        (SELECT price FROM products WHERE product_id = #{warehouseDetailId} LIMIT 1), 
+	        (SELECT discount FROM products WHERE product_id = #{warehouseDetailId} LIMIT 1), 
+	        NOW(),
+	        NOW()
+	    RETURNING *
+	)
+	SELECT 
+		order_detail_id orderDetailid,
+		order_id orderId, 
+        warehouse_detail_id warehouseDetailId, 
+        (SELECT product_name FROM products WHERE product_id = inserted.warehouse_detail_id) AS productName,        
+        qty, 
+        price, 
+        discount
+	FROM inserted;
+	
+	</select> -->
 </mapper>

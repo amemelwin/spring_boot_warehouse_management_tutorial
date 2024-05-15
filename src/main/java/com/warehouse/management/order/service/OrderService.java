@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.warehouse.management.order.dto.OrderCreateDto;
 import com.warehouse.management.order.repository.OrderRepository;
 import com.warehouse.management.utility.ApiResponse;
 
@@ -30,5 +31,10 @@ public class OrderService {
 	
 	public ResponseEntity<Object> getWarehouseProductOption(int addressId){
 		return new ApiResponse(HttpStatus.OK,"OK",orderRepository.getWarehouseProductOption(addressId)).response();
+	}
+	
+	public ResponseEntity<Object> createOrder(OrderCreateDto orderCreateDto){
+		//orderRepository.createAndSelectOrder(orderCreateDto)
+		return new ApiResponse(HttpStatus.OK,"Succc",orderCreateDto).response();
 	}
 }

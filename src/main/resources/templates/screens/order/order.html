@@ -303,6 +303,7 @@
 									renderSelectOption($("#productId"),ans.data.map(({warehouseDetailId,productName})=>({value: warehouseDetailId,title: productName})));
 									$(".createOrderPageOne").toggle();
 									$(".createOrderPageTwo").toggle();
+									
 								}else{
 									createOrderErrEle.text("選んだ配達先側の在庫に注文できる商品がまだないです！");
 									createOrderErrEle.parent().show();
@@ -319,7 +320,7 @@
 					console.log(error);
 				});	
 			}
-		})
+		});
 
 		$("#customerId").change(function(){
 			const customerId = $(this).val();
@@ -404,6 +405,40 @@
 			}else{
 				// setError
 				setError("add-product-err","商品を選択の上注文数を入力してください。");
+			}
+		});
+		
+		$("#create-order").click(()=>{
+			const orderDetails = $("#orderDetails").val();
+			console.log(orderDetails);
+			const customerId =  $("#customerId").val();
+			const method = 'POST';
+			const body = JSON.stringify({
+				order_details : JSON.parse(orderDetails),
+				customer_id: JSON.parse(customerId)
+			});
+			const headers = {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			};
+			console.log(body);
+			if($("#warehouseDetails").val()){
+				fetch(
+					(`api/v1/order`),
+					{
+						method,
+				        headers,
+				        body										
+					}
+				).then((res)=>{
+					if(res.ok){
+						return res.json().then((ans)=>{
+							console.log("final ans",ans);
+						})
+					}else{
+						console.log("eeerror");
+					}
+				})
 			}
 		})
 	})
