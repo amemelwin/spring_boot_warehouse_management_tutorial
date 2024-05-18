@@ -9,20 +9,26 @@ import lombok.Data;
 @Data
 public class OrderCreateDto {
 	
-	@JsonProperty("order_details")
-    private ArrayList<OrderDetailsDto> orderDetails;
+	@JsonProperty("order_id")
+	private int orderId;
 	
+	@JsonProperty("employee_id")
+	private int employeeId;
+	
+	@JsonProperty("order_details")
+    private ArrayList<OrderDetailCreateDto> orderDetails;	
 	
 	@JsonProperty("customer_id")
 	private int customerId;
 	
-	public class OrderDetailsDto {
-
-	    @JsonProperty("qty")
-	    private int qty;
-
-	    @JsonProperty("warehouse_detail_id")
-	    private int warehouseDetailId;
-	}
+	@JsonProperty("delivery_address_id")
+	private int deliveryAddressId;
+	
+	@JsonProperty("order_code")
+	private String orderCode;
+	
+	@JsonProperty("status")
+	private int status;
+	
+	
 }
-//order_details

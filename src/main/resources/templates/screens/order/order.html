@@ -412,10 +412,12 @@
 			const orderDetails = $("#orderDetails").val();
 			console.log(orderDetails);
 			const customerId =  $("#customerId").val();
+			const deliveryAddressId =  $("#addressId").val();
 			const method = 'POST';
 			const body = JSON.stringify({
 				order_details : JSON.parse(orderDetails),
-				customer_id: JSON.parse(customerId)
+				customer_id: JSON.parse(customerId),
+				delivery_address_id :JSON.parse(deliveryAddressId)
 			});
 			const headers = {
 				'Accept': 'application/json',
