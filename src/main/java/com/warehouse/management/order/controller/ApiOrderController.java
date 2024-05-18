@@ -1,5 +1,8 @@
 package com.warehouse.management.order.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.warehouse.management.order.dto.OrderCreateDto;
+import com.warehouse.management.order.dto.OrderDetailCreateDto;
 import com.warehouse.management.order.service.OrderService;
+
+import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("api/v1")
@@ -19,6 +25,26 @@ public class ApiOrderController {
 
 	@Autowired
 	private OrderService orderService;
+	
+	@PostConstruct
+	public void init() {
+		OrderCreateDto orderCreateDto = new OrderCreateDto();
+		orderCreateDto.setCustomerId(1);
+		orderCreateDto.setDeliveryAddressId(1);
+		
+		OrderDetailCreateDto detail1 =new OrderDetailCreateDto();
+		detail1.setWarehouseDetailId(1);
+		detail1.setQty(2);
+		
+		OrderDetailCreateDto detail2 =new OrderDetailCreateDto();
+		detail2.setWarehouseDetailId(2);
+		detail2.setQty(3);
+		
+		orderCreateDto.setOrderDetails(new ArrayList<OrderDetailCreateDto>(Arrays.asList(detail1,detail2)));
+		
+		System.out.println(orderCreateDto);
+//		orderService.createOrder(orderCreateDto);
+	}
 	
 	@GetMapping("/customer/{customerId}/address")
 	public ResponseEntity<Object> getCustomerDeliveryAddress(@PathVariable int customerId){

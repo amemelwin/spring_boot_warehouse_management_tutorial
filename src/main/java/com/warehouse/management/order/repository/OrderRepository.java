@@ -21,5 +21,5 @@ public interface OrderRepository {
 	
 	public OrderCreateDto createAndSelectOrder(OrderCreateDto orderCreateDto);
 	
-	public ArrayList<OrderDetailCreateDto> createAndSelectOrderDetails(ArrayList<OrderDetailCreateDto> orderDetails,int customerId);
+	public ArrayList<OrderDetailCreateDto> selectOrderDetails(int orderId);
 }
