@@ -2,8 +2,10 @@ package com.warehouse.management.address.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,18 @@ public class ApiAddressController {
 	public ResponseEntity<Object> addNewAddress(@RequestBody DeliveryAddressDto deliveryAddressDto,@PathVariable("customerId") int customerId){
 		deliveryAddressDto.setCustomerId(customerId);
 		return addressService.addNewAddress(deliveryAddressDto);
+	}
+	
+	@PutMapping("/delivery-address")
+	public ResponseEntity<Object> updateAddress(@RequestBody DeliveryAddressDto deliveryAddressDto,@PathVariable("customerId") int customerId){
+		deliveryAddressDto.setCustomerId(customerId);
+		return addressService.updateAddress(deliveryAddressDto);
+	}
+	
+	@DeleteMapping("/delivery-address/{id}")
+	public ResponseEntity<Object> deleteAddress(@PathVariable("id") int addressId){
+		return addressService.deleteAddress(addressId);
+		
 	}
 
 }

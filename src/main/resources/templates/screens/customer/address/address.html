@@ -53,8 +53,26 @@
 					<td th:text="*{postCode}"></td>
 					<td th:text="*{address}"></td>
 					<td class="text-center">
-						<button action="update">Edit</button>
-						<button action="delete">Delete</button>
+						<button 
+							action="update"
+							th:data-id="*{deliveryAddressId}"
+							th:data-region-id="*{regionId}"
+							th:data-region-name="*{regionName}"
+							th:data-address-name="*{addressName}"
+							th:data-address="*{address}"
+							th:data-post-code="*{postCode}"
+							data-toggle="modal" 
+							data-target="#updateAddressModal" 
+						>
+							Edit
+						</button>
+						<button 
+							action="delete" 
+							th:data-id="*{deliveryAddressId}"
+							data-toggle="modal" 
+							data-target="#deleteAddressModal" >
+						Delete
+					</button>
 					</td>
 				</tr>
 			</tbody>
@@ -121,7 +139,91 @@
 		</div>
 	</div>
 
+	<!-- Update Address Modal -->
+	<div class="modal fade" id="updateAddressModal" tabindex="-1"
+		role="dialog" aria-labelledby="updateAddressModalTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group d-flex flex-row align-items-center"
+						style="margin-bottom: 10px;">
+						<!-- address id  -->
+						<input type="hidden" id="updateAddressId"/>
+						<label for="updateRegionId" style="width: 200px;">Region :</label> <select
+							name="updateRegionId" id="updateRegionId" class="form-control">
+							<option th:each="option:${regionOptions}"
+								th:value="${option.regionId}" th:text="${option.regionName}"></option>
+						</select>
+					</div>
+					<div class="form-group d-flex flex-row align-items-center"
+						style="margin-bottom: 10px;">
+						<label for="updatedAddressName" class="" style="width: 200px;">Address
+							Name: </label> <input class="form-control" type="text" name="updatedAddressName"
+							id="updatedAddressName" />
+					</div>
+					<div style="margin-top: 10px; display: none;">
+						<span class="alert alert-warning d-flex flex-row"
+							id="update-address-name-err"></span>
+					</div>
+					<div class="form-group d-flex flex-row align-items-center"
+						style="margin-bottom: 10px;">
+						<label for="updatePostCode" class="" style="width: 200px;">Post
+							Code: </label> <input class="form-control" type="text" name="updatePostCode"
+							id="updatePostCode" />
+					</div>
+					<div style="margin-top: 10px; display: none;">
+						<span class="alert alert-warning d-flex flex-row"
+							id="update-post-code-err"></span>
+					</div>
+					<div class="form-group d-flex flex-row align-items-center"
+						style="margin-bottom: 10px;">
+						<label for="updateAddress" class="" style="width: 200px;">Address:
+						</label> <input class="form-control" type="text" name="updateAddress"
+							id="updateAddress" />
+					</div>
+					<div style="margin-top: 10px; display: none;">
+						<span class="alert alert-warning d-flex flex-row" id="update-address-err"></span>
+					</div>
+				</div>
+				<div class="modal-footer d-flex justify-content-center">
+					<button type="button" id="update-address-action"
+						class="btn btn-primary">Update Address</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<!-- Delete Address Modal -->
+	  <div class="modal fade" id="deleteAddressModal" tabindex="-1" role="dialog" aria-labelledby="deleteAddressModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Address</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="delete-address-id"/>
+				<div class="text-danger h4 text-center">Are you sure want to delete?</div>
+				<a>Lorem ipsum dolor sit amet consectetur </a>
+			</div>
+			<div class="modal-footer d-flex justify-content-center">
+				<button type="button" data-toggle="modal" data-target="#deleteAddressModal" class="btn btn-success">Cancel</button>
+			  	<button type="button" id="delete-address-action" class="btn btn-danger">Delete</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+  
 	<!-- common function -->
 	<script>
 	var reload = (param)=>{
@@ -232,8 +334,169 @@
 					});	
 				}
 			});			
+		});
+	</script>
+
+	<script>
+	$(document).ready(function(){
+		/* common element */
+		const updateAddressEle = {
+			id: $("#updateAddressId"),
+			regionId: $("#updateRegionId"),
+			addressName: $("#updatedAddressName"),
+			address: $("#updateAddress"),
+			postCode: $("#updatePostCode")
+		}
+		
+		const errorElements = {
+			addressName: $("#update-address-name-err"),
+			address: $("#update-address-err"),
+			postCode: $("#update-post-code-err")
+		}
+		
+		const clearError = ()=>{
+			errorElements.addressName.parent().hide();
+			errorElements.address.parent().hide();
+			errorElements.postCode.parent().hide();
+		}
+			
+		/* Open Update Customer Modal */
+		$("button[action='update']").click(function(){
+			const currentAddress = {
+				deliveryAddressId: $(this).data('id'),
+				regionId: $(this).data('region-id'),
+				//regionName: $(this).data('region-name'),
+				addressName: $(this).data('address-name'),
+				address: $(this).data('address'),
+				postCode: $(this).data('post-code')
+			}
+
+			/* Load Data */
+			updateAddressEle.id.val(currentAddress.deliveryAddressId);
+			updateAddressEle.addressName.val(currentAddress.addressName);
+			updateAddressEle.address.val(currentAddress.address);
+			updateAddressEle.postCode.val(currentAddress.postCode);
+			clearError();
 		})
-	  </script>
+
+		/* Open Delete Address Modal */
+		$("button[action='delete']").click(function(){
+			const addressId = $(this).data('id');
+			/* Load Data */
+			$("#delete-address-id").val(addressId);
+		})
+
+		/* Update Action */
+		$("#update-address-action").click(()=>{
+			
+			// will known nature of element
+			const setError = (ele,msg)=>{
+				ele.text(msg);
+				ele.parent().show();
+			}
+			
+			const bindingResult = (error)=>{
+				if(error.errors){
+					if(error.errors.first_name){
+						setError(errorElements.firstName,error.errors.first_name);
+					}
+					if(error.errors.last_name){
+						setError(errorElements.lastName,error.errors.last_name);
+					}
+					if(error.errors.phone){
+						setError(errorElements.phone,error.errors.phone);
+					}
+					if(error.errors.mail){
+						setError(errorElements.mail,error.errors.mail);
+					}
+				}
+			}
+			
+			/* 1. clear error msg & 2. frontend side validate*/
+			const validate = ()=>{
+				clearError();
+				let validate = true;
+				if(!updateAddressEle.addressName.val()){
+					setError(errorElements.addressName,"Address Name is required!");
+					validate=false;
+				}
+				if(!updateAddressEle.postCode.val()){
+					setError(errorElements.postCode,"Post Code is required!");
+					validate=false;
+				}
+				if(!updateAddressEle.address.val()){
+					setError(errorElements.address,"Address is required!");
+					validate=false;
+				}				
+											
+				return validate;
+			}
+			
+			if(validate()){
+				// 3. api call (fetch)
+				const url = `api/v1/delivery-address`
+				const method = "PUT";
+				const body = JSON.stringify({
+					address_id: updateAddressEle.id.val(),
+					region_id:updateAddressEle.regionId.val(),
+					address_name: updateAddressEle.addressName.val(),
+					address: updateAddressEle.address.val(),
+					post_code: updateAddressEle.postCode.val()
+				});
+				const headers = {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				};
+				fetch(
+					url, 
+					{method, headers, body})
+					.then((response)=>{
+						if (response.ok) {
+							reload("updated");
+						} else {
+							return response.json().then(error => {
+								console.log("error",error);
+								bindingResult(error);
+								throw new Error('Error response received'); // Throw an error to trigger the catch block
+							});
+						}
+					})
+					.catch((error)=>{
+					console.log(error);
+				});	
+			}
+			
+		});
+	});
+	
+	/* Delete Action */
+	$("#delete-address-action").click(()=>{
+		const url = `api/v1/delivery-address/${$("#delete-address-id").val()}`;
+		const method = "DELETE";
+		const headers = {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		};
+		fetch(
+			url, 
+			{method, headers})
+			.then((response)=>{
+				if (response.ok) {
+					reload("deleted");
+				} else {
+					return response.json().then(error => {
+						bindingResult(error);
+						throw new Error('Error response received'); // Throw an error to trigger the catch block
+					});
+				}
+			})
+			.catch((error)=>{
+			console.log(error);
+		});	
+	});
+
+	</script>
+	
 
 	<script>
 	$(document).ready(function(){ 
@@ -244,6 +507,7 @@
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
+		crossorigin="anonymous">
+	</script>
 </body>
 </html>

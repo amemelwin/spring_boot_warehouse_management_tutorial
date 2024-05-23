@@ -15,11 +15,7 @@ public class AddressController {
 	@Autowired
 	private AddressService addressService;
 	
-	@GetMapping("/regions")
-	public ModelAndView getOrder(ModelAndView mav) {
-		System.out.println("Hello");
-		return addressService.getAddressPage(mav);
-	}
+	
 	
 	
 	

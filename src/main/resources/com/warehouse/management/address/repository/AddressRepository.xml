@@ -42,12 +42,36 @@
         address, 
         post_code AS postCode, 
         main, 
-        created_at AS createdAt, 
-        updated_at AS updatedAt
+        created_at AS createdAt
     FROM delivery_addresses
     WHERE region_id = #{regionId} AND customer_id = #{customerId}
     ORDER BY delivery_address_id DESC;
+</select>
+
+<select id="updateAddress" resultType="com.warehouse.management.address.dto.DeliveryAddressDto">
+	UPDATE delivery_addresses
+	SET region_id=#{regionId}, customer_id=#{customerId}, address_name=#{addressName}, address=#{address}, post_code=#{postCode}, main=-1,updated_at=NOW()
+	WHERE delivery_address_id= #{addressId};
+	
+	 SELECT 
+        delivery_address_id AS addressId,
+        region_id AS regionId,  
+        customer_id AS customerId, 
+        address_name AS addressName, 
+        address, 
+        post_code AS postCode, 
+        main, 
+        created_at AS createdAt,
+        updated_at AS updatedAt
+    FROM delivery_addresses
+    WHERE delivery_address_id = #{addressId} AND deleted_at IS NULL;
+
 </select>		
 	
+<delete id="deleteAddress">
+	DELETE FROM delivery_addresses
+	WHERE delivery_address_id = #{addressId};
+
+</delete>
 
 </mapper>
