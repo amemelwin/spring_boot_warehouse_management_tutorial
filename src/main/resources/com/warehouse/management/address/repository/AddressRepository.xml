@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.warehouse.management.address.repository.AddressRepository">
+	
+	<select id="getRegions" resultType="com.warehouse.management.address.dto.RegionOptionDto">
+		SELECT
+			region_id AS regionId,
+			region_name AS regionName
+		FROM regions
+		WHERE deleted_at IS NULL ;
+	</select>
+	
+<select id="addAddress" resultType="com.warehouse.management.address.dto.DeliveryAddressDto">
+    INSERT INTO delivery_addresses (
+        region_id,  
+        customer_id, 
+        address_name, 
+        address, 
+        post_code, 
+        main, 
+        created_at, 
+        updated_at
+    )
+    VALUES (
+        #{regionId}, 
+        #{customerId}, 
+        #{addressName},
+        #{address}, 
+        #{postCode}, 
+        -1, 
+        NOW(), 
+        NOW()
+    );
+    
+    SELECT 
+        delivery_address_id AS addressId,
+        region_id AS regionId,  
+        customer_id AS customerId, 
+        address_name AS addressName, 
+        address, 
+        post_code AS postCode, 
+        main, 
+        created_at AS createdAt, 
+        updated_at AS updatedAt
+    FROM delivery_addresses
+    WHERE region_id = #{regionId} AND customer_id = #{customerId}
+    ORDER BY delivery_address_id DESC;
+</select>		
+	
+
+</mapper>

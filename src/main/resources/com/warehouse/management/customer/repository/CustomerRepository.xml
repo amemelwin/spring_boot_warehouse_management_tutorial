@@ -95,4 +95,12 @@
 		SET deleted_at = NOW()
 		WHERE customer_id = #{customerId};
 	</delete>
+	
+	<select id="getRegions" resultType="com.warehouse.management.address.dto.RegionOptionDto">
+		SELECT
+			region_id AS regionId,
+			region_name AS regionName
+		FROM regions
+		WHERE deleted_at IS NULL ;
+	</select>
 </mapper>

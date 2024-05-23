@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.warehouse.management.address.dto.RegionOptionDto;
 import com.warehouse.management.customer.dto.CustomerCreateDto;
 import com.warehouse.management.customer.dto.CustomerDeliveryAddress;
 import com.warehouse.management.customer.dto.CustomerDto;
@@ -23,4 +24,8 @@ public interface CustomerRepository {
 	public CustomerDto updateAndSelectCustomer(CustomerCreateDto customerCreateDto);
 	
 	public void deleteCustomer(long customerId);
+	
+	// new
+	public ArrayList<RegionOptionDto> getRegions();
+
 }

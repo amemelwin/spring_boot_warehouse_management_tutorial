@@ -22,4 +22,8 @@ public interface OrderRepository {
 	public OrderCreateDto createAndSelectOrder(OrderCreateDto orderCreateDto);
 	
 	public ArrayList<OrderDetailCreateDto> selectOrderDetails(int orderId);
+	
+	public ArrayList<OrderCreateDto> getOrders();
+	
+	public void deleteOrder(@Param("orderId") int orderId);
 }

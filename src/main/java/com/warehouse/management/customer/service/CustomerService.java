@@ -22,7 +22,9 @@ public class CustomerService {
 	
 	public ModelAndView getCustomerAddressPage(int customerId,ModelAndView mav) {
 		mav.setViewName("screens/customer/address/address");
-		
+		// Add object here for region
+		//mav.setViewName("screens/customer/2/address");
+		mav.addObject("regionOptions",customerRepository.getRegions());
 		mav.addObject("deliveryAddresses",customerRepository.getCustomerDeliveryAddress(customerId));
 		return mav;
 	}

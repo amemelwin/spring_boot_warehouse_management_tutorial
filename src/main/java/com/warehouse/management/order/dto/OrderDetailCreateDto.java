@@ -8,9 +8,6 @@ import lombok.Data;
 public class OrderDetailCreateDto {
 	@JsonProperty("order_detail_id")
 	private int orderDetailId;
-	
-//	@JsonProperty("customer_id")
-//	private int customerId;
 
 	@JsonProperty("order_id")
 	private long orderId;
