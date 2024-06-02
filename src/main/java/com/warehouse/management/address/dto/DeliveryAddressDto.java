@@ -36,8 +36,8 @@ public class DeliveryAddressDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private Timestamp createdAt;
 
-    @JsonProperty("deleted_at")
+    @JsonProperty("updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
-    private Timestamp deletedAt;
+    private Timestamp updatedAt;
 
 }

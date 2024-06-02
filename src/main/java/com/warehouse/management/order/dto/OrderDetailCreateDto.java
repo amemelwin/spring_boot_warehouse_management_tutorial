@@ -25,6 +25,10 @@ public class OrderDetailCreateDto {
 	private long discount;
 
 	@JsonProperty("product_name")
-	private String productName;;
+	private String productName;
+	
+	// for test
+	//private boolean isEnoughStock = false;
+	private int stock ;
 
 }

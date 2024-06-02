@@ -1,0 +1,27 @@
+package com.warehouse.management.store.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.warehouse.management.store.dto.WarehouseDto;
+import com.warehouse.management.store.service.WarehouseService;
+
+@RestController
+@RequestMapping("api/v1")
+public class ApiWarehouseController {
+	
+	@Autowired
+	private WarehouseService warehouseService;
+	
+	@PostMapping("/warehouse")
+	public ResponseEntity<Object> addWarehouse(@RequestBody WarehouseDto warehouseDto){
+		System.out.println(warehouseDto);
+		return warehouseService.addWarehouse(warehouseDto);
+	}
+
+}

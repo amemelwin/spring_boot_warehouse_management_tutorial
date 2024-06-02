@@ -33,11 +33,12 @@
 			LIMIT 1);
 	</select>
 	
-	<!-- <select id="isValidOrderId" resultType="boolean">
-		SELECT NOT COUNT(*)>0
-		FROM order_details 
-		WHERE order_id != #{orderId}
-	</select> -->
+	<select id="isEnoughStock" resultType="boolean">
+	    SELECT (COUNT(*) > 0)
+	    FROM warehouse_details 
+	    WHERE warehouse_detail_id = #{orderDetails.warehouseDetailId} AND stock >= #{orderDetails.qty};
+	</select>
+
 	
 	<select id="createAndSelectOrder" resultType="com.warehouse.management.order.dto.OrderCreateDto">
         <!-- Create Order -->
@@ -80,6 +81,10 @@
                 NOW(),
                 NOW()
             );
+            
+            UPDATE warehouse_details
+			SET stock= stock- #{detail.qty} , updated_at= NOW()
+			WHERE warehouse_detail_id= #{detail.warehouseDetailId};
     	</foreach>
     
 	    SELECT 
@@ -101,6 +106,14 @@
 
 </select>
 
+<select id="checkIsEnoughStock"  resultType="com.warehouse.management.order.dto.OrderDetailCreateDto">
+	SELECT 
+		p.product_name productName,		
+		warehouse_details.stock 	
+	FROM warehouse_details
+	LEFT JOIN products p ON p.product_id = warehouse_details.product_id
+	WHERE warehouse_detail_id = #{warehouseDetailId};
+</select>
 	
 <select id="selectOrderDetails" resultType="com.warehouse.management.order.dto.OrderDetailCreateDto">
 	SELECT 

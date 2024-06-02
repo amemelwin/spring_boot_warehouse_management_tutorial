@@ -26,4 +26,8 @@ public interface OrderRepository {
 	public ArrayList<OrderCreateDto> getOrders();
 	
 	public void deleteOrder(@Param("orderId") int orderId);
+	
+	public boolean isEnoughStock(OrderCreateDto orderCreateDto);
+	
+	public OrderDetailCreateDto checkIsEnoughStock(OrderDetailCreateDto orderDetailDto);
 }

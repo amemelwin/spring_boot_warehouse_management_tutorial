@@ -1,4 +1,4 @@
-package com.warehouse.management.address.dto;
+package com.warehouse.management.store.dto;
 
 import lombok.Data;
 

@@ -195,6 +195,10 @@
 							<button id="next" type="button" class="btn btn-secondary">Next</button>
 						</div>
 					</div>
+					<!-- Error -->
+					<div style="display: none;">
+						<div id="error-msg" class="alert alert-warning"></div>
+					</div>
 					<div class="createOrderPageTwo" style="display: none;">
 						<div class="modal-footer d-flex justify-content-center">
 							<button id="prev" type="button" class="btn btn-secondary">Previous</button>
@@ -448,7 +452,6 @@
 		const addProduct = ({warehouse_detail_id,qty})=>{
 			warehouse_detail_id = parseInt(warehouse_detail_id);
 			qty = parseInt(qty);
-			console.log({warehouse_detail_id,qty});
 			const orderDetailsStr = $("#orderDetails").val();
 			let orderDetailsArr = JSON.parse(orderDetailsStr);
 			if(orderDetailsArr.filter(({warehouse_detail_id: id})=>id==warehouse_detail_id).length>0){
@@ -482,7 +485,26 @@
 				setError("add-product-err","商品を選択の上注文数を入力してください。");
 			}
 		});
-		
+		const bindingResult = (error)=>{
+			if(error.errors){	
+				const errorContainer = $("#error-msg");			
+				// Call the displayErrors function with the errors from the API response
+				displayErrors(error.errors,errorContainer);				
+			}else{
+				errorContainer.parent().hide();
+			}
+		}
+
+		// Function to display errors in the UI using jQuery
+        function displayErrors(errors,errorContainer) {         
+			errorContainer.parent().show();
+            errorContainer.empty(); // Clear previous errors
+            $.each(errors, function(key, errorMessage) {
+                errorContainer.append($('<p>').text(errorMessage));
+            });
+        }
+
+
 		$("#create-order").click(()=>{
 			const orderDetails = $("#orderDetails").val();
 			const customerId =  $("#customerId").val();
@@ -497,7 +519,6 @@
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			};
-			console.log(body);
 			if($("#warehouseDetails").val()){
 				fetch(
 					(`api/v1/order`),
@@ -512,7 +533,6 @@
 					} else {
 						return response.json().then(error => {
 							bindingResult(error);
-							throw new Error('Error response received'); // Throw an error to trigger the catch block
 						});
 					}
 				})

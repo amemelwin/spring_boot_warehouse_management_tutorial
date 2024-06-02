@@ -96,7 +96,7 @@
 		WHERE customer_id = #{customerId};
 	</delete>
 	
-	<select id="getRegions" resultType="com.warehouse.management.address.dto.RegionOptionDto">
+	<select id="getRegions" resultType="com.warehouse.management.store.dto.RegionOptionDto">
 		SELECT
 			region_id AS regionId,
 			region_name AS regionName

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;import org.apache.ibatis.annotations.Param;
 
 import com.warehouse.management.address.dto.DeliveryAddressDto;
-import com.warehouse.management.address.dto.RegionOptionDto;
+import com.warehouse.management.store.dto.RegionOptionDto;
 
 @Mapper
 public interface AddressRepository {
