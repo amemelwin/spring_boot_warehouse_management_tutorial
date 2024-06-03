@@ -3,6 +3,7 @@ package com.warehouse.management.store.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,9 @@ public class ApiWarehouseController {
 	
 	@PostMapping("/warehouse")
 	public ResponseEntity<Object> addWarehouse(@RequestBody WarehouseDto warehouseDto){
-		System.out.println(warehouseDto);
 		return warehouseService.addWarehouse(warehouseDto);
 	}
+	
+
 
 }

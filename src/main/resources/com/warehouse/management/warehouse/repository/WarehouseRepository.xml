@@ -29,6 +29,30 @@
 		LIMIT  1;
 		
 	</select>
+	
+	<select id="getWarehouses" resultType="com.warehouse.management.store.dto.WarehouseDto">
+		SELECT 
+			warehouse_id warehouseId,
+			region_id regionId,
+			warehouse_name warehouseName,
+			created_at createdAt,
+			updated_at updatedAt
+		FROM 
+			warehouses
+	</select>
+	
+	<select id="getWarehouseDetailsByWarehouseId" resultType="com.warehouse.management.warehouse.detail.dto.WarehouseDetailsDto">
+		SELECT 
+			warehouse_detail_id warehouseDetailId,
+			warehouse_id warehouseId,
+			product_id productId,
+			(SELECT product_name from products WHERE product_id = warehouse_details.product_id) productName,
+			stock,
+			safe_stock_amt safeStockAmount,
+			lead_days leadDays
+		FROM warehouse_details
+		WHERE warehouse_id = #{warehouseId}
+	</select>
 
 	
 </mapper>

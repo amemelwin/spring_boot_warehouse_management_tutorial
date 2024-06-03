@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" >
-<head th:insert="fragments/header.html::head('Warehouse')"></head>
+<head th:insert="fragments/header.html::head('Warehouse Detail')"></head>
 <body>
 	<!-- Menu -->
 	<div th:replace="fragments/menu.html::menu(currentRoute='/warehouse')"></div>
@@ -8,10 +8,10 @@
 	<div style="margin-top: 130px;"></div>
 	
 	<div class="container" style="margin-bottom: 50px;">
-		<a class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">Add Warehouse</a>
+		<a class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">Add Warehouse Detail</a>
 	</div>
 	
-	<!-- Warehouse table -->
+	<!-- Warehouse Detail table -->
 	<div class="container">
 		<div class="mb-5" th:if="${param.success}">
 			<span class="alert alert-success d-flex flex-row">顧客様登録が正常に完了いたしました。</span>
@@ -28,37 +28,38 @@
 		<table id="warehouseTable" class="table table-bordered table-striped">
 			<thead class="thead-dark text-center text-white" style="background-color: rgb(132, 132, 132);">
 			  <tr>
-				<th scope="col" class="text-center">Warehouse ID</th>
-				<th scope="col" class="text-center">Warehouse Name</th>
+				<th scope="col" class="text-center">Warehouse Detail ID</th>
+				<th scope="col" class="text-center">Product Name</th>
+				<th scope="col" class="text-center">Stock</th>
+				<th scope="col" class="text-center">Safe Stock Amount</th>
+				<th scope="col" class="text-center">Lead Days</th>
 				<th scope="col" class="text-center">Action</th>
 			  </tr>
 			</thead>
 			<tbody>
-			  <tr th:each="warehouse:${warehouses}" th:object="${warehouse}">
-				<th scope="row" style="text-align: right;padding-right: 15px;" th:text="*{warehouseId}"></th>
-				<td>
-					<div th:text="*{warehouseName}"></div>					
-				</td>
-				
-				<td class="text-center">
-					<a th:href="@{'warehouse/'+*{warehouseId}+'/warehouseDetails'}">Warehouse Details</a>
-					<button 
-						action="update" 
-						th:data-id="*{warehouseId}"
-						th:data-warehousename="*{warehouseName}"
-						class="m-3" 
-						data-toggle="modal" 
-						data-target="#updateWarehouseModal" 
-					>Edit</button>
-					<button 
-						action="delete" 
-						th:data-id="*{warehouseId}"					
-						class="m-3" 
-						data-toggle="modal" 
-						data-target="#deleteWarehouseModal"
-					>Delete</button>
-				</td>
-			  </tr>
+				<tr th:each="detail:${warehouseDetails}" th:object="${detail}">
+					<th class="text-center" scope="row" style="text-align: right;padding-right: 15px;" th:text="*{warehouseDetailId}"></th>
+					<td class="text-center"><div th:text="*{productName}"></div></td>					
+					<td class="text-center"><div th:text="*{stock}"></div></td>					
+					<td class="text-center"><div th:text="*{safeStockAmount}"></div></td>					
+					<td class="text-center"><div th:text="*{leadDays}"></div></td>					
+					<td class="text-center">
+						<button 
+							action="update" 
+							th:data-id="*{warehouseDetailId}"
+							class="m-3" 
+							data-toggle="modal" 
+							data-target="#updateWarehouseModal" 
+						>Edit</button>
+						<button 
+							action="delete" 
+							th:data-id="*{warehouseDetailId}"					
+							class="m-3" 
+							data-toggle="modal" 
+							data-target="#deleteWarehouseModal"
+						>Delete</button>
+					</td>
+			 	</tr>
 			</tbody>
 		  </table>
 	</div>

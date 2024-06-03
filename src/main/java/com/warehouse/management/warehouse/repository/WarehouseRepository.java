@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.warehouse.management.store.dto.RegionOptionDto;
 import com.warehouse.management.store.dto.WarehouseDto;
+import com.warehouse.management.warehouse.detail.dto.WarehouseDetailsDto;
 
 @Mapper
 
@@ -13,6 +14,12 @@ public interface WarehouseRepository {
 	public ArrayList<RegionOptionDto> getRegionOption();
 	
 	public WarehouseDto createAndSelectWarehouse(WarehouseDto warehouseDto);
+	
+	public ArrayList<WarehouseDto> getWarehouses();
+	
+	public ArrayList<WarehouseDetailsDto> getWarehouseDetailsByWarehouseId(int warehouseId);
+	
+	
 
 }
 

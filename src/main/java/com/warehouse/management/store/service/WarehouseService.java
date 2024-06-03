@@ -19,12 +19,20 @@ public class WarehouseService {
 	public ModelAndView getWarehousePage(ModelAndView mav) {
 		mav.setViewName("screens/warehouse/warehouse");		
 		mav.addObject("regionOptions",warehouseRepository.getRegionOption());
-		
+		mav.addObject("warehouses",warehouseRepository.getWarehouses());
 		return mav;
 	}
 	
 	public ResponseEntity<Object> addWarehouse(WarehouseDto warhouseDto){
 		warehouseRepository.createAndSelectWarehouse(warhouseDto);
 		return new ApiResponse(HttpStatus.CREATED, "success").response();
+	}
+	
+	public ModelAndView getWarehouseDetailsByWarehouseId(ModelAndView mav,int warehouseId){
+		mav.setViewName("screens/warehouse/warehouseDetail");
+		mav.addObject("warehouseDetails",warehouseRepository.getWarehouseDetailsByWarehouseId(warehouseId));
+		return mav;
+		//return new ApiResponse(HttpStatus.OK, "success",warehouseRepository.getWarehouseDetailsByWarehouseId(warehouseId)).response();
+
 	}
 }
