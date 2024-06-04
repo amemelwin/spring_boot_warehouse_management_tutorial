@@ -53,6 +53,31 @@
 		FROM warehouse_details
 		WHERE warehouse_id = #{warehouseId}
 	</select>
+	
+	<select id="getProductOption" resultType="com.warehouse.management.product.dto.ProductOptionDto">
+		SELECT 
+			product_id productId,
+			product_name productName
+		FROM 
+		products;				
+	</select>
+	
+	<select id="createAndSelectWarehouseDetail" resultType="com.warehouse.management.warehouse.detail.dto.WarehouseDetailsDto">
+		INSERT INTO warehouse_details(
+		warehouse_id, product_id, stock,safe_stock_amt,lead_days, created_at, updated_at)
+		VALUES (#{warehouseId},#{productId}, #{stock}, 0,0 , NOW(), NOW());
+		
+		SELECT 
+			warehouse_detail_id warehouseDetailId,
+			warehouse_id warehouseId,
+			product_id productId,
+			stock,
+			created_at createdAt,
+			updated_at updatedAt
+		FROM warehouse_details
+		WHERE warehouse_id = #{warehouseId} AND deleted_at IS NULL 
+		LIMIT 1;
+	</select>
 
 	
 </mapper>

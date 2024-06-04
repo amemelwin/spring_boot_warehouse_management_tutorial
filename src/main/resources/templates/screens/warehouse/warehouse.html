@@ -35,9 +35,9 @@
 			</thead>
 			<tbody>
 			  <tr th:each="warehouse:${warehouses}" th:object="${warehouse}">
-				<th scope="row" style="text-align: right;padding-right: 15px;" th:text="*{warehouseId}"></th>
+				<th scope="row" class="text-center" th:text="*{warehouseId}"></th>
 				<td>
-					<div th:text="*{warehouseName}"></div>					
+					<div th:text="*{warehouseName}" class="text-center "></div>					
 				</td>
 				
 				<td class="text-center">
@@ -46,14 +46,14 @@
 						action="update" 
 						th:data-id="*{warehouseId}"
 						th:data-warehousename="*{warehouseName}"
-						class="m-3" 
+						class="m-3 btn btn-secondary" 
 						data-toggle="modal" 
 						data-target="#updateWarehouseModal" 
 					>Edit</button>
 					<button 
 						action="delete" 
 						th:data-id="*{warehouseId}"					
-						class="m-3" 
+						class="m-3 btn btn-danger" 
 						data-toggle="modal" 
 						data-target="#deleteWarehouseModal"
 					>Delete</button>

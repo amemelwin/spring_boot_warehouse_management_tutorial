@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.warehouse.management.store.dto.WarehouseDto;
 import com.warehouse.management.utility.ApiResponse;
+import com.warehouse.management.warehouse.detail.dto.WarehouseDetailsDto;
 import com.warehouse.management.warehouse.repository.WarehouseRepository;
 
 @Service
@@ -30,9 +31,12 @@ public class WarehouseService {
 	
 	public ModelAndView getWarehouseDetailsByWarehouseId(ModelAndView mav,int warehouseId){
 		mav.setViewName("screens/warehouse/warehouseDetail");
+		mav.addObject("productOptions",warehouseRepository.getProductOption());
 		mav.addObject("warehouseDetails",warehouseRepository.getWarehouseDetailsByWarehouseId(warehouseId));
 		return mav;
-		//return new ApiResponse(HttpStatus.OK, "success",warehouseRepository.getWarehouseDetailsByWarehouseId(warehouseId)).response();
-
+	}
+	
+	public ResponseEntity<Object> addWarehouseDetail(WarehouseDetailsDto warehouseDetailDto){
+		return new ApiResponse(HttpStatus.CREATED,"success",warehouseRepository.createAndSelectWarehouseDetail(warehouseDetailDto)).response();
 	}
 }

@@ -8,7 +8,7 @@
 	<div style="margin-top: 130px;"></div>
 	
 	<div class="container" style="margin-bottom: 50px;">
-		<a class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">Add Warehouse Detail</a>
+		<a class="btn btn-primary" data-toggle="modal" data-target="#addWarehouseDetailModal">Add Warehouse Detail</a>
 	</div>
 	
 	<!-- Warehouse Detail table -->
@@ -32,7 +32,7 @@
 				<th scope="col" class="text-center">Product Name</th>
 				<th scope="col" class="text-center">Stock</th>
 				<th scope="col" class="text-center">Safe Stock Amount</th>
-				<th scope="col" class="text-center">Lead Days</th>
+				<th scope="col" class="text-center">Warehouse Id</th>
 				<th scope="col" class="text-center">Action</th>
 			  </tr>
 			</thead>
@@ -42,19 +42,19 @@
 					<td class="text-center"><div th:text="*{productName}"></div></td>					
 					<td class="text-center"><div th:text="*{stock}"></div></td>					
 					<td class="text-center"><div th:text="*{safeStockAmount}"></div></td>					
-					<td class="text-center"><div th:text="*{leadDays}"></div></td>					
+					<td class="text-center"><div id="warehouseId" th:text="*{warehouseId}"></div></td>					
 					<td class="text-center">
 						<button 
 							action="update" 
 							th:data-id="*{warehouseDetailId}"
-							class="m-3" 
+							class="m-3 btn btn-secondary" 
 							data-toggle="modal" 
 							data-target="#updateWarehouseModal" 
 						>Edit</button>
 						<button 
 							action="delete" 
 							th:data-id="*{warehouseDetailId}"					
-							class="m-3" 
+							class="m-3 btn btn-danger" 
 							data-toggle="modal" 
 							data-target="#deleteWarehouseModal"
 						>Delete</button>
@@ -64,8 +64,8 @@
 		  </table>
 	</div>
 
-	<!-- Create Warehouse Modal -->
-	  <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerModalTitle" aria-hidden="true">
+	<!-- Create Warehouse Detail Modal -->
+	  <div class="modal fade" id="addWarehouseDetailModal" tabindex="-1" role="dialog" aria-labelledby="addWarehouseDetailModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 		  <div class="modal-content">
 			<div class="modal-header">
@@ -74,30 +74,30 @@
 				<span aria-hidden="true">&times;</span>
 			  </button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body">				
 				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-					<label for="warehouseName" class="" style="width: 200px;">Warehouse Name: </label>
-					<input class="form-control" type="text" name="warehouseName" id="warehouseName" />
-				</div>
-				<div style="margin-top: 10px;display: none;">
-					<span class="alert alert-warning d-flex flex-row" id="warehouseName-err"></span>
-				</div>	
-				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-					<label for="regionId" style="width: 200px;">Region :</label>
-						<select name="regionId" id="regionId" class="form-control">
+					<label for="productId" style="width: 200px;">Product Name :</label>
+						<select name="productId" id="productId" class="form-control">
 							<option></option>
-							<option th:each="option:${regionOptions}"
-								th:value="${option.regionId}" th:text="${option.regionName}"></option>
+							<option th:each="option:${productOptions}"
+								th:value="${option.productId}" th:text="${option.productName}"></option>
 						</select>
 				</div>
+				<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
+					<label for="stock" class="" style="width: 200px;">Stock: </label>
+					<input class="form-control" type="text" name="stock" id="stock" />
+				</div>
+				<div style="margin-top: 10px;display: none;">
+					<span class="alert alert-warning d-flex flex-row" id="stock-err"></span>
+				</div>	
 			</div>
 			<div class="modal-footer d-flex justify-content-center">
-			  <button type="button" id="add-warehouse-action" class="btn btn-primary">Submit</button>
+			  <button type="button" id="add-warehouse-detail-action" class="btn btn-primary">Submit</button>
 			</div>
 		  </div>
 		</div>
 	  </div>
-  	 <!-- Update Customer Modal -->
+  	 <!-- Update Warehouse Detail Modal -->
   <div class="modal fade" id="updateCustomerModal" tabindex="-1" role="dialog" aria-labelledby="updateCustomerModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
@@ -108,7 +108,7 @@
 		  </button>
 		</div>
 		<div class="modal-body">
-			<!-- customer id  -->
+			<!-- warehouse detaiil id  -->
 			<input type="hidden" id="updateCustomerId"/>
 			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
 				<label for="updateFirstName" class="" style="width: 200px;">First Name: </label>
@@ -183,22 +183,23 @@
 	}
 	
 	 </script>
-	<!-- Warehouse create -->
+	<!-- Warehouse detail create -->
 	<script>
 	$(document).ready(function(){
 		const errorElements = {
-			  warehouseName: $("#warehouseName-err")
+			  productName: $("#productName-err"),
+			  stock:$("#stock-err")
 			}
-			const createWarehouseData  = {
-				regionId: $("#regionId"),
-				warehouseName:  $("#warehouseName")
+			const createWarehouseDetailData  = {
+				productId: $("#productId"),
+				stock:  $("#stock")
 			}
 			const setError = (ele,msg)=>{
 				ele.text(msg);
 				ele.parent().show();
 			}
 			const clearError = ()=>{
-			errorElements.warehouseName.parent().hide();
+			errorElements.productName.parent().hide();
 		}
 		
 		const bindingResult = (error)=>{
@@ -213,25 +214,29 @@
 		const validate = ()=>{
 			clearError();
 			let validate = true;
-			if(!createWarehouseData.warehouseName.val()){
-				setError(errorElements.warehouseName,"Warehouse Name is required!");
+			if(!createWarehouseDetailData.productId.val()){
+				setError(errorElements.warehouseName,"Product Name is required!");
 				validate=false;
 			}	
+			if(!createWarehouseDetailData.stock.val()){
+				setError(errorElements.stock,"Stock is required!");
+			}
 				
 			return validate;
 		}
 		
 		
-		/* Add Warehouse Action */
-		$("#add-warehouse-action").click(function(){
+		/* Add Warehouse Detail Action */
+		$("#add-warehouse-detail-action").click(function(){
 			// 3. api call (fetch)
 			if(validate()){
-				const url = "api/v1/warehouse"
+				const warehouseId = $("#warehouseId").text();
+				const url = `http://localhost:8080/api/v1/warehouse/${warehouseId}/warehouse-detail`;
 				const method = "POST";
 				const body = JSON.stringify({
-				region_id : createWarehouseData.regionId.val(),
-				warehouse_name : createWarehouseData.warehouseName.val()
-
+				warehouse_id :parseInt($("#warehouseId").text()),
+				product_id : parseInt(createWarehouseDetailData.productId.val()),
+				stock : parseInt(createWarehouseDetailData.stock.val())
 			});
 			const headers = {
 				'Accept': 'application/json',
@@ -242,7 +247,8 @@
 				{method, headers, body})
 				.then((response)=>{
 					if (response.ok) {
-						reload("sucess ");
+						reload("success ");
+						//window.location.href="http://localhost:8080/order"
 					} else {
 						return response.json().then(error => {
 							//bindingResult(error);
