@@ -24,6 +24,10 @@ public interface WarehouseRepository {
 	
 	public WarehouseDetailsDto createAndSelectWarehouseDetail(WarehouseDetailsDto warehouseDetailDto);
 	
+	public void deleteWarehouse(int warehouseId);
+	
+	public void deleteWarehouseDetail(int warehouseDetailId);
+	
 	
 
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,12 +35,22 @@ public class ApiWarehouseController {
 		return warehouseService.addWarehouse(warehouseDto);
 	}
 	
+	@DeleteMapping("/warehouse/{warehouseId}")
+    public ResponseEntity<Object> deleteWarehouse(@PathVariable("warehouseId") int warehouseId){
+    	return warehouseService.deleteWarehouse(warehouseId);
+    }
+	
     @PostMapping("/warehouse/{warehouseId}/warehouse-detail")
 	public ResponseEntity<Object> addWarehouseDetail(@PathVariable("warehouseId") int warehouseId,@RequestBody WarehouseDetailsDto warehouseDetailDto){
     	warehouseDetailDto.setWarehouseId(warehouseId);
-    	System.out.println("warehouseDetailDto"+warehouseDetailDto);
 		return warehouseService.addWarehouseDetail(warehouseDetailDto);
 	}
+    
+    @DeleteMapping("/warehouse-details/{warehouseDetailId}")
+    public ResponseEntity<Object> deleteWarehouseDetail(@PathVariable("warehouseDetailId") int warehouseDetailId){
+    	return warehouseService.deleteWarehouseDetail(warehouseDetailId);
+    }
+    
 	
 	private void validate(Object obj) {
 		Class<?> cls = obj.getClass();

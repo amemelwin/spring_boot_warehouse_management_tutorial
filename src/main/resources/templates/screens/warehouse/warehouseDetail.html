@@ -56,7 +56,7 @@
 							th:data-id="*{warehouseDetailId}"					
 							class="m-3 btn btn-danger" 
 							data-toggle="modal" 
-							data-target="#deleteWarehouseModal"
+							data-target="#deleteWarehouseDetailModal"
 						>Delete</button>
 					</td>
 			 	</tr>
@@ -145,24 +145,24 @@
 	  </div>
 	</div>
   </div>
-  	 <!-- Delete Customer Modal -->
-  <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerModalTitle" aria-hidden="true">
+  	 <!-- Delete Warehouse Detail Modal -->
+  <div class="modal fade" id="deleteWarehouseDetailModal" tabindex="-1" role="dialog" aria-labelledby="deleteWarehouseDetailModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Customer</h5>
+		  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Warehouse Detail</h5>
 		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		  </button>
 		</div>
 		<div class="modal-body">
-			<input type="hidden" id="delete-customer-id"/>
+			<input type="hidden" id="delete-warehouse-detail-id"/>
 			<div class="text-danger h4 text-center">Are you sure want to delete?</div>
 			<a>Lorem ipsum dolor sit amet consectetur </a>
 		</div>
 		<div class="modal-footer d-flex justify-content-center">
-			<button type="button" data-toggle="modal" data-target="#deleteCustomerModal" class="btn btn-success">Cancel</button>
-		  	<button type="button" id="delete-customer-action" class="btn btn-danger">Delete</button>
+			<button type="button" data-toggle="modal" data-target="#deleteWarehouseDetailModal" class="btn btn-success">Cancel</button>
+		  	<button type="button" id="delete-warehouse-detail-action" class="btn btn-danger">Delete</button>
 		</div>
 	  </div>
 	</div>
@@ -187,7 +187,7 @@
 	<script>
 	$(document).ready(function(){
 		const errorElements = {
-			  productName: $("#productName-err"),
+			  //productName: $("#productName-err"),
 			  stock:$("#stock-err")
 			}
 			const createWarehouseDetailData  = {
@@ -199,7 +199,7 @@
 				ele.parent().show();
 			}
 			const clearError = ()=>{
-			errorElements.productName.parent().hide();
+			errorElements.stock.parent().hide();
 		}
 		
 		const bindingResult = (error)=>{
@@ -214,14 +214,14 @@
 		const validate = ()=>{
 			clearError();
 			let validate = true;
-			if(!createWarehouseDetailData.productId.val()){
-				setError(errorElements.warehouseName,"Product Name is required!");
-				validate=false;
-			}	
+			// if(!createWarehouseDetailData.productId.val()){
+			// 	setError(errorElements.warehouseName,"Product Name is required!");
+			// 	validate=false;
+			// }	
 			if(!createWarehouseDetailData.stock.val()){
 				setError(errorElements.stock,"Stock is required!");
-			}
-				
+				validate=false;
+			}				
 			return validate;
 		}
 		
@@ -240,11 +240,11 @@
 				warehouse_id :warehouseId,
 				product_id : parseInt(createWarehouseDetailData.productId.val()),
 				stock : parseInt(createWarehouseDetailData.stock.val())
-			});
-			const headers = {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			};
+				});
+				const headers = {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				};
 			fetch(
 				url, 
 				{method, headers, body})
@@ -316,9 +316,9 @@
 
 		/* Open Delete customer Modal */
 		$("button[action='delete']").click(function(){
-			const customerId = $(this).data('id');
+			const warehouseDetailId = $(this).data('id');
 			/* Load Data */
-			$("#delete-customer-id").val(customerId);
+			$("#delete-warehouse-detail-id").val(warehouseDetailId);
 		})
 
 		/* Update Action */
@@ -414,8 +414,8 @@
 		});
 
 		/* Delete Action */
-		$("#delete-customer-action").click(()=>{
-			const url = `api/v1/customer/${$("#delete-customer-id").val()}`;
+		$("#delete-warehouse-detail-action").click(()=>{
+			const url = `http://localhost:8080/api/v1/warehouse-details/${$("#delete-warehouse-detail-id").val()}`;
 			const method = "DELETE";
 			const headers = {
 				'Accept': 'application/json',

@@ -144,24 +144,24 @@
 	  </div>
 	</div>
   </div>
-  	 <!-- Delete Customer Modal -->
-  <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerModalTitle" aria-hidden="true">
+  	 <!-- Delete Warehouse Modal -->
+  <div class="modal fade" id="deleteWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="deleteWarehouseModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Customer</h5>
+		  <h5 class="modal-title text-center" id="exampleModalLongTitle">Delete Warehouse</h5>
 		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		  </button>
 		</div>
 		<div class="modal-body">
-			<input type="hidden" id="delete-customer-id"/>
+			<input type="hidden" id="delete-warehouse-id"/>
 			<div class="text-danger h4 text-center">Are you sure want to delete?</div>
 			<a>Lorem ipsum dolor sit amet consectetur </a>
 		</div>
 		<div class="modal-footer d-flex justify-content-center">
-			<button type="button" data-toggle="modal" data-target="#deleteCustomerModal" class="btn btn-success">Cancel</button>
-		  	<button type="button" id="delete-customer-action" class="btn btn-danger">Delete</button>
+			<button type="button" data-toggle="modal" data-target="#deleteWarehouseModal" class="btn btn-success">Cancel</button>
+		  	<button type="button" id="delete-warehouse-action" class="btn btn-danger">Delete</button>
 		</div>
 	  </div>
 	</div>
@@ -257,7 +257,7 @@
 		});
 	})
 	 </script>
-	<!-- Customer update -->
+	<!-- Warehouse update -->
   <script>
 	$(document).ready(function(){
 		/* common element */
@@ -306,9 +306,9 @@
 
 		/* Open Delete customer Modal */
 		$("button[action='delete']").click(function(){
-			const customerId = $(this).data('id');
+			const warehouseId = $(this).data('id');
 			/* Load Data */
-			$("#delete-customer-id").val(customerId);
+			$("#delete-warehouse-id").val(warehouseId);
 		})
 
 		/* Update Action */
@@ -404,8 +404,8 @@
 		});
 
 		/* Delete Action */
-		$("#delete-customer-action").click(()=>{
-			const url = `api/v1/customer/${$("#delete-customer-id").val()}`;
+		$("#delete-warehouse-action").click(()=>{
+			const url = `api/v1/warehouse/${$("#delete-warehouse-id").val()}`;
 			const method = "DELETE";
 			const headers = {
 				'Accept': 'application/json',

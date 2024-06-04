@@ -39,4 +39,14 @@ public class WarehouseService {
 	public ResponseEntity<Object> addWarehouseDetail(WarehouseDetailsDto warehouseDetailDto){
 		return new ApiResponse(HttpStatus.CREATED,"success",warehouseRepository.createAndSelectWarehouseDetail(warehouseDetailDto)).response();
 	}
+	
+	public ResponseEntity<Object> deleteWarehouse(int warehouseId){
+		warehouseRepository.deleteWarehouse(warehouseId);
+		return new ApiResponse(HttpStatus.NO_CONTENT,"deleted successfully").response();
+	}
+	
+	public ResponseEntity<Object> deleteWarehouseDetail(int warehouseDetailId){
+		warehouseRepository.deleteWarehouseDetail(warehouseDetailId);
+		return new ApiResponse(HttpStatus.NO_CONTENT,"deleted successfully").response();
+	}
 }

@@ -78,6 +78,16 @@
 		WHERE warehouse_id = #{warehouseId} AND deleted_at IS NULL 
 		LIMIT 1;
 	</select>
+	
+	<delete id="deleteWarehouse">
+		DELETE FROM warehouses
+		WHERE warehouse_id = #{warehouseId};		
+	</delete>
+	
+	<delete id="deleteWarehouseDetail">
+		DELETE FROM warehouse_details
+		WHERE warehouse_detail_id = #{warehouseDetailId};		
+	</delete>
 
 	
 </mapper>
