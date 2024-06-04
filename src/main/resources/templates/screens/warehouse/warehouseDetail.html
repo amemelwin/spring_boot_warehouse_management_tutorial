@@ -25,7 +25,7 @@
 			<span class="alert alert-danger d-flex flex-row">顧客様を削除しました。</span>
 		</div>
 		
-		<table id="warehouseTable" class="table table-bordered table-striped">
+		<table id="warehouseDetailTable" class="table table-bordered table-striped">
 			<thead class="thead-dark text-center text-white" style="background-color: rgb(132, 132, 132);">
 			  <tr>
 				<th scope="col" class="text-center">Warehouse Detail ID</th>
@@ -108,7 +108,7 @@
 		  </button>
 		</div>
 		<div class="modal-body">
-			<!-- warehouse detaiil id  -->
+			<!-- warehouse detail id  -->
 			<input type="hidden" id="updateCustomerId"/>
 			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
 				<label for="updateFirstName" class="" style="width: 200px;">First Name: </label>
@@ -229,12 +229,15 @@
 		/* Add Warehouse Detail Action */
 		$("#add-warehouse-detail-action").click(function(){
 			// 3. api call (fetch)
-			if(validate()){
-				const warehouseId = $("#warehouseId").text();
+				const currentPath = window.location.pathname;
+				const pathSegments = currentPath.split('/');
+				const warehouseId = pathSegments[2];
+			if(validate()){				
+				//const warehouseId = parseInt($("#warehouseId").text());
 				const url = `http://localhost:8080/api/v1/warehouse/${warehouseId}/warehouse-detail`;
 				const method = "POST";
 				const body = JSON.stringify({
-				warehouse_id :parseInt($("#warehouseId").text()),
+				warehouse_id :warehouseId,
 				product_id : parseInt(createWarehouseDetailData.productId.val()),
 				stock : parseInt(createWarehouseDetailData.stock.val())
 			});
@@ -438,7 +441,7 @@
 	});
 	
 	$(document).ready(function(){
-		$('#warehouseTable').DataTable();
+		$('#warehouseDetailTable').DataTable();
 	})
 	</script>
 	
