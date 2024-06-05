@@ -54,12 +54,16 @@
 		WHERE warehouse_id = #{warehouseId}
 	</select>
 	
-	<select id="getProductOption" resultType="com.warehouse.management.product.dto.ProductOptionDto">
+	<select id="getProductOption" resultType="com.warehouse.management.product.dto.ProductOptionDto">		
 		SELECT 
-			product_id productId,
-			product_name productName
-		FROM 
-		products;				
+			DISTINCT product_id AS productId,
+		    product_name AS productName
+		FROM products
+		WHERE product_id NOT IN (
+		    SELECT product_id
+		    FROM warehouse_details
+		    WHERE warehouse_id = #{warehouseId}
+		);		
 	</select>
 	
 	<select id="createAndSelectWarehouseDetail" resultType="com.warehouse.management.warehouse.detail.dto.WarehouseDetailsDto">

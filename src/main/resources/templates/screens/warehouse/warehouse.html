@@ -8,7 +8,7 @@
 	<div style="margin-top: 130px;"></div>
 	
 	<div class="container" style="margin-bottom: 50px;">
-		<a class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">Add Warehouse</a>
+		<a class="btn btn-primary" data-toggle="modal" data-target="#addWarehouseModal">Add Warehouse</a>
 	</div>
 	
 	<!-- Warehouse table -->
@@ -46,6 +46,7 @@
 						action="update" 
 						th:data-id="*{warehouseId}"
 						th:data-warehousename="*{warehouseName}"
+						th:data-regionid="*{regionId}"
 						class="m-3 btn btn-secondary" 
 						data-toggle="modal" 
 						data-target="#updateWarehouseModal" 
@@ -64,7 +65,7 @@
 	</div>
 
 	<!-- Create Warehouse Modal -->
-	  <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerModalTitle" aria-hidden="true">
+	  <div class="modal fade" id="addWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="addWarehouseModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 		  <div class="modal-content">
 			<div class="modal-header">
@@ -96,50 +97,37 @@
 		  </div>
 		</div>
 	  </div>
-  	 <!-- Update Customer Modal -->
-  <div class="modal fade" id="updateCustomerModal" tabindex="-1" role="dialog" aria-labelledby="updateCustomerModalTitle" aria-hidden="true">
+  	 <!-- Update Warehouse Modal -->
+  <div class="modal fade" id="updateWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="updateWarehouseModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLongTitle">Update Customer</h5>
+		  <h5 class="modal-title" id="exampleModalLongTitle">Update Warehouse</h5>
 		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		  </button>
 		</div>
 		<div class="modal-body">
-			<!-- customer id  -->
-			<input type="hidden" id="updateCustomerId"/>
+			<!-- Warehouse id  -->
+			<input type="hidden" id="updateWarehouseId"/>
 			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-				<label for="updateFirstName" class="" style="width: 200px;">First Name: </label>
-				<input class="form-control" type="text" name="updateFirstName" id="updateFirstName" />
+				<label for="updateWarehouseName" class="" style="width: 200px;">Warehouse Name: </label>
+				<input class="form-control" type="text" name="updateWarehouseName" id="updateWarehouseName" />
 			</div>
 			<div style="margin-top: 10px;display: none;">
-				<span class="alert alert-warning d-flex flex-row" id="updateFirstName-err"></span>
-			</div>			
+				<span class="alert alert-warning d-flex flex-row" id="update-warehouseName-err"></span>
+			</div>	
 			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-				<label for="updateLastName" class="" style="width: 200px;">Last Name: </label>
-				<input class="form-control" type="text" name="updateLastName" id="updateLastName" />
-			</div>
-			<div style="margin-top: 10px;display: none;">
-				<span class="alert alert-warning d-flex flex-row" id="updatedLastName-err"></span>
-			</div>
-			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-				<label for="updateEmail" class="" style="width: 200px;">Email: </label>
-				<input class="form-control" type="email" name="updateEmail" id="updateEmail" />
-			</div>
-			<div style="margin-top: 10px;display: none;">
-				<span class="alert alert-warning d-flex flex-row" id="updateEmail-err"></span>
-			</div>
-			<div class="form-group d-flex flex-row align-items-center" style="margin-bottom: 10px;">
-				<label for="updatePhone" class="" style="width: 200px;">Phone: </label>
-				<input class="form-control" type="tel" name="updatePhone" id="updatePhone" />
-			</div>
-			<div style="margin-top: 10px;display: none;">
-				<span class="alert alert-warning d-flex flex-row" id="updatedPhone-err"></span>
+				<label for="updateRegionId" style="width: 200px;">Region :</label>
+					<select name="updateRegionId" id="updateRegionId" class="form-control">
+						<option></option>
+						<option th:each="option:${regionOptions}"
+							th:value="${option.regionId}" th:text="${option.regionName}"></option>
+					</select>
 			</div>			
 		</div>
 		<div class="modal-footer d-flex justify-content-center">
-		  <button type="button" id="update-customer-action" class="btn btn-primary">Update</button>
+		  <button type="button" id="update-warehouse-action" class="btn btn-primary">Update</button>
 		</div>
 	  </div>
 	</div>
@@ -261,50 +249,38 @@
   <script>
 	$(document).ready(function(){
 		/* common element */
-		const updateCustomerEle = {
-			id: $("#updateCustomerId"),
-			firstName: $("#updateFirstName"),
-			lastName: $("#updateLastName"),
-			mail: $("#updateEmail"),
-			phone: $("#updatePhone"),
+		const updateWarehouseEle = {
+			id: $("#updateWarehouseId"),
+			warehouseName: $("#updateWarehouseName"),
+			regionId: $("#updateRegionId")
 		}
 		
 		const errorElements = {
-			firstName: $("#updateFirstName-err"),
-			lastName: $("#updateLastName-err"),
-			mail: $("#updateEmail-err"),
-			phone: $("#updatePhone-err"),
+			warehouseName: $("#update-warehouseName-err")
 		}
 		
 		const clearError = ()=>{
-			errorElements.firstName.parent().hide();
-			errorElements.lastName.parent().hide();
-			errorElements.mail.parent().hide();
-			errorElements.phone.parent().hide();
+			errorElements.warehouseName.parent().hide();
 		}
 		
 		/* common element */
 		
 		/* Open Update Customer Modal */
 		$("button[action='update']").click(function(){
-			const currentCustomer = {
-				customerId: $(this).data('id'),
-				firstName: $(this).data('firstname'),
-				lastName: $(this).data('lastname'),
-				phone: $(this).data('phone'),
-				mail: $(this).data('mail')
+			const currentWarehouse = {
+				warehouseId: $(this).data('id'),
+				regionId: $(this).data('regionid'),
+				warehouseName: $(this).data('warehousename')
 			}
 
 			/* Load Data */
-			updateCustomerEle.id.val(currentCustomer.customerId);
-			updateCustomerEle.firstName.val(currentCustomer.firstName);
-			updateCustomerEle.lastName.val(currentCustomer.lastName);
-			updateCustomerEle.phone.val(currentCustomer.phone);
-			updateCustomerEle.mail.val(currentCustomer.mail);			
+			updateWarehouseEle.id.val(currentWarehouse.warehouseId);
+			updateWarehouseEle.regionId.val(currentWarehouse.regionId);
+			updateWarehouseEle.warehouseName.val(currentWarehouse.warehouseName);
 			clearError();
 		})
 
-		/* Open Delete customer Modal */
+		/* Open Delete warehouse Modal */
 		$("button[action='delete']").click(function(){
 			const warehouseId = $(this).data('id');
 			/* Load Data */
@@ -312,7 +288,7 @@
 		})
 
 		/* Update Action */
-		$("#update-customer-action").click(()=>{
+		$("#update-warehouse-action").click(()=>{
 			
 			// will known nature of element
 			const setError = (ele,msg)=>{
@@ -347,35 +323,20 @@
 			const validate = ()=>{
 				clearError();
 				let validate = true;
-				if(!updateCustomerEle.firstName.val()){
-					setError(errorElements.firstName,"First Name is required!");
+				if(!updateWarehouseEle.warehouseName.val()){
+					setError(errorElements.warehouseName,"Warehouse Name is required!");
 					validate=false;
-				}
-				if(!updateCustomerEle.lastName.val()){
-					setError(errorElements.lastName,"Last Name is required!");
-					validate=false;
-				}
-				if(!updateCustomerEle.mail.val()){
-					setError(errorElements.mail,"Mail is required!");
-					validate=false;
-				}				
-				if(!updateCustomerEle.phone.val()){
-					setError(errorElements.phone,"Phone is required!");
-					validate=false;
-				}
-							
+				}		
 				return validate;
 			}
 			
 			if(validate()){
 				// 3. api call (fetch)
-				const url = `api/v1/customer/${updateCustomerEle.id.val()}`
+				const url = `api/v1/warehouse/${updateWarehouseEle.id.val()}`
 				const method = "PUT";
 				const body = JSON.stringify({
-					first_name: updateCustomerEle.firstName.val(),
-					last_name: updateCustomerEle.lastName.val(),
-					mail: updateCustomerEle.mail.val(),
-					phone: updateCustomerEle.phone.val()
+					warehouse_name:updateWarehouseEle.warehouseName.val(),
+					region_id: updateWarehouseEle.regionId.val()
 				});
 				const headers = {
 					'Accept': 'application/json',
@@ -387,11 +348,10 @@
 					.then((response)=>{
 						if (response.ok) {
 							reload("updated");
-							init();
 						} else {
 							return response.json().then(error => {
 								console.log("error",error);
-								bindingResult(error);
+								//bindingResult(error);
 								throw new Error('Error response received'); // Throw an error to trigger the catch block
 							});
 						}

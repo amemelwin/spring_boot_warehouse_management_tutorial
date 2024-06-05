@@ -20,7 +20,7 @@ public interface WarehouseRepository {
 	
 	public ArrayList<WarehouseDetailsDto> getWarehouseDetailsByWarehouseId(int warehouseId);
 	
-	public ArrayList<ProductOptionDto> getProductOption();
+	public ArrayList<ProductOptionDto> getProductOption(int warehouseId);
 	
 	public WarehouseDetailsDto createAndSelectWarehouseDetail(WarehouseDetailsDto warehouseDetailDto);
 	

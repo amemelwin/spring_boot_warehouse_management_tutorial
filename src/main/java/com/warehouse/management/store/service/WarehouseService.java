@@ -31,7 +31,7 @@ public class WarehouseService {
 	
 	public ModelAndView getWarehouseDetailsByWarehouseId(ModelAndView mav,int warehouseId){
 		mav.setViewName("screens/warehouse/warehouseDetail");
-		mav.addObject("productOptions",warehouseRepository.getProductOption());
+		mav.addObject("productOptions",warehouseRepository.getProductOption(warehouseId));
 		mav.addObject("warehouseDetails",warehouseRepository.getWarehouseDetailsByWarehouseId(warehouseId));
 		return mav;
 	}
