@@ -29,6 +29,12 @@ public class WarehouseService {
 		return new ApiResponse(HttpStatus.CREATED, "success").response();
 	}
 	
+	public ResponseEntity<Object> updateWarehouse(WarehouseDto warhouseDto){
+		warehouseRepository.updateAndSelectWarehouse(warhouseDto);
+		return new ApiResponse(HttpStatus.OK,"successfully updated").response();
+	}
+
+	
 	public ModelAndView getWarehouseDetailsByWarehouseId(ModelAndView mav,int warehouseId){
 		mav.setViewName("screens/warehouse/warehouseDetail");
 		mav.addObject("productOptions",warehouseRepository.getProductOption(warehouseId));
@@ -39,6 +45,7 @@ public class WarehouseService {
 	public ResponseEntity<Object> addWarehouseDetail(WarehouseDetailsDto warehouseDetailDto){
 		return new ApiResponse(HttpStatus.CREATED,"success",warehouseRepository.createAndSelectWarehouseDetail(warehouseDetailDto)).response();
 	}
+	
 	
 	public ResponseEntity<Object> deleteWarehouse(int warehouseId){
 		warehouseRepository.deleteWarehouse(warehouseId);

@@ -307,15 +307,6 @@
 					if(error.errors.first_name){
 						setError(errorElements.firstName,error.errors.first_name);
 					}
-					if(error.errors.last_name){
-						setError(errorElements.lastName,error.errors.last_name);
-					}
-					if(error.errors.phone){
-						setError(errorElements.phone,error.errors.phone);
-					}
-					if(error.errors.mail){
-						setError(errorElements.mail,error.errors.mail);
-					}
 				}
 			}
 			
@@ -338,6 +329,7 @@
 					warehouse_name:updateWarehouseEle.warehouseName.val(),
 					region_id: updateWarehouseEle.regionId.val()
 				});
+				console.log(body)
 				const headers = {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'

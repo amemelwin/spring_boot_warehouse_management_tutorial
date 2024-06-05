@@ -26,8 +26,15 @@
 		FROM 
 			warehouses
 		WHERE created_at = NOW() AND deleted_at IS NULL AND region_id = #{regionId}
-		LIMIT  1;
-		
+		LIMIT  1;		
+	</select>
+	
+	<select id="updateAndSelectWarehouse" resultType="com.warehouse.management.store.dto.WarehouseDto">
+		UPDATE warehouses
+		SET region_id= #{regionId}, 
+		warehouse_name=#{warehouseName},
+		updated_at= NOW()
+		WHERE warehouse_id = #{warehouseId};
 	</select>
 	
 	<select id="getWarehouses" resultType="com.warehouse.management.store.dto.WarehouseDto">

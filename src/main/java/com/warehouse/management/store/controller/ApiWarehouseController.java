@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,12 @@ public class ApiWarehouseController {
 	public ResponseEntity<Object> addWarehouse(@RequestBody WarehouseDto warehouseDto){
 		return warehouseService.addWarehouse(warehouseDto);
 	}
+	
+	@PutMapping("/warehouse/{warehouseId}")
+	public ResponseEntity<Object> updateWarehouse(@PathVariable("warehouseId") int warehouseId,@RequestBody WarehouseDto warehouseDto){
+    	warehouseDto.setWarehouseId(warehouseId);
+		return warehouseService.updateWarehouse(warehouseDto);
+    }
 	
 	@DeleteMapping("/warehouse/{warehouseId}")
     public ResponseEntity<Object> deleteWarehouse(@PathVariable("warehouseId") int warehouseId){

@@ -16,6 +16,8 @@ public interface WarehouseRepository {
 	
 	public WarehouseDto createAndSelectWarehouse(WarehouseDto warehouseDto);
 	
+	public WarehouseDto updateAndSelectWarehouse(WarehouseDto warehouseDto);
+	
 	public ArrayList<WarehouseDto> getWarehouses();
 	
 	public ArrayList<WarehouseDetailsDto> getWarehouseDetailsByWarehouseId(int warehouseId);
