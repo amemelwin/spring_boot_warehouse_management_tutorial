@@ -19,6 +19,9 @@ public class WarehouseDto {
 	@JsonProperty("warehouse_name")
 	private String warehouseName;
 	
+	@JsonProperty("no_of_warehouse_detail")
+	private int noOfwarehouseDetail;
+	
 	@JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private Timestamp createdAt;

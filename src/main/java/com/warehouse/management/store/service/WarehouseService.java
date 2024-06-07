@@ -21,6 +21,7 @@ public class WarehouseService {
 		mav.setViewName("screens/warehouse/warehouse");		
 		mav.addObject("regionOptions",warehouseRepository.getRegionOption());
 		mav.addObject("warehouses",warehouseRepository.getWarehouses());
+
 		return mav;
 	}
 	

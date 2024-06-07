@@ -99,6 +99,24 @@
 			SET stock= stock- #{detail.qty} , updated_at= NOW()
 			WHERE warehouse_detail_id= #{detail.warehouseDetailId};
     	</foreach>
+    	
+    	 <!-- Calculate Grand Total and Update Customer Points -->
+    WITH order_total AS (
+        SELECT 
+            SUM(od.qty * p.price) AS grandTotal
+        FROM 
+            order_details od
+        JOIN 
+            warehouse_details wd ON od.warehouse_detail_id = wd.warehouse_detail_id
+        JOIN 
+            products p ON wd.product_id = p.product_id
+        WHERE 
+            od.order_id = (SELECT order_id FROM orders WHERE customer_id = #{customerId} ORDER BY order_id DESC LIMIT 1)
+    )
+    UPDATE customers
+    SET point = point + (SELECT FLOOR(grandTotal / 200) FROM order_total)
+    WHERE customer_id = #{customerId};
+    	
     
 	    SELECT 
 		    orders.order_id AS orderId, 

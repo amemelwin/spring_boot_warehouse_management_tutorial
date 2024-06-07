@@ -39,13 +39,19 @@
 	
 	<select id="getWarehouses" resultType="com.warehouse.management.store.dto.WarehouseDto">
 		SELECT 
-			warehouse_id warehouseId,
-			region_id regionId,
-			warehouse_name warehouseName,
-			created_at createdAt,
-			updated_at updatedAt
+		    w.warehouse_id AS warehouseId,
+		    w.region_id AS regionId,
+		    w.warehouse_name AS warehouseName,
+		    w.created_at AS createdAt,
+		    w.updated_at AS updatedAt,
+		    (
+		        SELECT COUNT(*)
+		        FROM warehouse_details wd
+		        WHERE wd.warehouse_id = w.warehouse_id AND wd.deleted_at IS NULL
+		    ) AS noOfWarehouseDetail
 		FROM 
-			warehouses
+		    warehouses w;
+
 	</select>
 	
 	<select id="getWarehouseDetailsByWarehouseId" resultType="com.warehouse.management.warehouse.detail.dto.WarehouseDetailsDto">

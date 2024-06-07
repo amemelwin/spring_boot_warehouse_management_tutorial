@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" >
-<head th:insert="fragments/header.html::head('Warehouse')"></head>
+<head th:insert="fragments/header.html::head('Warehouse')">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
 	<!-- Menu -->
 	<div th:replace="fragments/menu.html::menu(currentRoute='/warehouse')"></div>
@@ -41,7 +43,11 @@
 				</td>
 				
 				<td class="text-center">
-					<a th:href="@{'warehouse/'+*{warehouseId}+'/warehouseDetails'}">Warehouse Details</a>
+					<a th:href="@{'warehouse/'+*{warehouseId}+'/warehouseDetails'}">
+						Warehouse Details 						
+					</a>
+					<span th:text="${warehouse.noOfwarehouseDetail}" style="background-color: darkgrey;" class="badge badge-pill badge-secondary">
+					</span>
 					<button 
 						action="update" 
 						th:data-id="*{warehouseId}"
@@ -329,7 +335,6 @@
 					warehouse_name:updateWarehouseEle.warehouseName.val(),
 					region_id: updateWarehouseEle.regionId.val()
 				});
-				console.log(body)
 				const headers = {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
